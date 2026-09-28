@@ -45,6 +45,8 @@ function Login() {
 
                 {error && <p>{error}</p>}
                 <button type="submit">Submit</button>
+
+                <button type="back">Back</button>
             </form>
         </div>
     );

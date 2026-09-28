@@ -173,3 +173,9 @@ p{
 .posts{
     background-color: #0A2342;
 }
+
+.Profile_header{
+    background-color: #0A2342;
+    color: rgba(225, 117, 100, 1);
+    padding: 10px;
+}

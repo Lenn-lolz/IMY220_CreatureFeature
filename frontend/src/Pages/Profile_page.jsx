@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import "../assets/CSS/styles.css"; 
 
 import Edit_profile from "../Components/Edit_profile";
 import Posts from "../Components/Posts";
@@ -66,11 +67,11 @@ function Profile_page() {
 
     return (
         <div className="profilePage-layout">
-            <h1>{profile.username}</h1>
+            <div className="Profile_header">
+                <h1>{profile.username}</h1>
+                <p>{profile.caption}</p>
+            </div>
 
-            <p>{profile.caption}</p>
-
-            <h2>Profile ID: {profile._id}</h2>
 
             <Edit_profile />
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import '../assets/Navigation.css';
+import '../assets/CSS/Navigation.css';
 
 function Navigation() {
     return (

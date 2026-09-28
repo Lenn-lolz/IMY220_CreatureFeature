@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 
-import "../assets/styles.css";
+import "../assets/CSS/styles.css";
 
 function Profile_preview({ prof }) {
 

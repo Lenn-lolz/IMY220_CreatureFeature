@@ -2,10 +2,10 @@
 
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
-import Home_page from "./pages/Home_page";
-import Post_page from "./pages/Post_page";
-import Splashpage from "./pages/Splash_page";
-import Profile_page from "./pages/Profile_page";
+import Home_page from "./Pages/Home_page";
+import Post_page from "./Pages/Post_page";
+import Splashpage from "./Pages/Splash_page";
+import Profile_page from "./Pages/Profile_page";
 import Navigation from "./Components/Navigation";
 import NotFound from "./Components/NotFound";
 import Post from "./Components/Post"

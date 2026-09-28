@@ -1,35 +1,55 @@
 import { useState, useEffect } from "react";
-import Profile_preview from "../Components/Profile_preview";
-import "../assets/CSS/styles.css"; 
 
-function Home_page(){
-    const [profs, setProfs] = useState([]);
+import Posts from "../Components/Posts";
+
+import "../assets/CSS/styles.css";
+
+function Home_page() {
+
+    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    useEffect(() => {fetch("http://localhost:3000/api/users").then((response) => {
-        if (!response.ok) {
-                throw new Error("Failed to retrieve users");
-        } return response.json();
-        }).then((data) => {
-                setProfs(data); setLoading(false); 
-            }) .catch((error) => { 
+    useEffect(() => {
+
+        fetch("http://localhost:3000/api/posts")
+            .then((response) => {
+
+                if (!response.ok) {
+                    throw new Error("Unable to load posts.");
+                }
+
+                return response.json();
+
+            })
+            .then((data) => {
+
+                setPosts(data);
+                setLoading(false);
+
+            })
+            .catch((error) => {
+
                 setError(error.message);
                 setLoading(false);
+
             });
-        }, []);
+
+    }, []);
+
     if (loading) {
-        return <p>Loading profiles...</p>;
-    } if (error) {
+        return <p>Loading posts...</p>;
+    }
+
+    if (error) {
         return <p>{error}</p>;
-    } return (
+    }
+
+    return (
         <div className="homePage-layout">
-            {profs.map((prof) => ( 
-                <div className="posts" key={prof._id}>
-                    <Profile_preview prof={prof} />
-                </div> 
-            ))}
-        </div> 
-    ); 
-} 
+            <Posts posts={posts} />
+        </div>
+    );
+}
+
 export default Home_page;

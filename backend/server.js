@@ -35,10 +35,16 @@ app.get("/api/posts", async (req, res) => {
     // TODO: Retrieve all posts from MongoDB
     try {
         const db = getDB();
-        const collection = db.collection("posts");
+        const collection = db.collection("Posts");
         const posts = await collection.find().toArray();
-        res.json(posts)
-        console.log("great success with retrieving thine posts!");
+        const formattedPosts = posts.map((post) => ({
+
+            ...post,
+            _id: post._id.toString()
+
+        }));
+        res.status(200).json(formattedPosts);
+        console.log("Great success with retrieving users!");
 
     }catch(error){
         console.log("error with retrieving posts - " , error.message);
@@ -47,19 +53,13 @@ app.get("/api/posts", async (req, res) => {
 //Profile API Request (View, Edit, View other profiles, Delete your profile)
 
 app.get("/api/users", async (req, res) => {
-
     try {
-
         const db = getDB();
-
         const collection = db.collection("Users");
-
         const users = await collection.find().toArray();
 
         const formattedUsers = users.map((user) => ({
-
             ...user,
-
             _id: user._id.toString()
 
         }));

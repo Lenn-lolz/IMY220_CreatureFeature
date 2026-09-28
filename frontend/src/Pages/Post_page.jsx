@@ -7,7 +7,7 @@ import "../assets/CSS/styles.css";
 function Post_page() {
     return (
         <div className= "PostPage-layout">
-            <Post />
+            <Posts />
         </div>
     );
 }

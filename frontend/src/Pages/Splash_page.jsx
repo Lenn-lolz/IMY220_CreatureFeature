@@ -1,5 +1,5 @@
 import Login from "../Components/Login";
-import '../assets/styles.css';
+import "../assets/CSS/styles.css"; 
 import { Link } from "react-router-dom";
 
 function Splashpage() {

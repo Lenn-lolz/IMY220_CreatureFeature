@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Profile_preview from "../Components/Profile_preview";
-import "../assets/styles.css"; 
+import "../assets/CSS/styles.css"; 
 
 function Home_page(){
     const [profs, setProfs] = useState([]);

@@ -1,0 +1,67 @@
+.SmallProfilePreview{
+    background-color: rgb(175, 175, 223);
+    display: flex;
+    margin:5px;
+}
+.Profile_posts{
+    display: flex;
+}
+
+.posts{
+    background-color: rgb(113, 122, 95);
+    padding:5px;
+    margin:2px;
+}
+
+#roundedImg {
+    max-width: 100px;
+    border-radius: 50%;     
+    object-fit: cover;       
+}
+
+.profilePage-layout , .homePage-layout, .PostPage-layout, .User_profile , .post{
+    position: absolute ;
+    left:200px;
+}
+.notFound_page{
+    text-align: center;
+    padding:5px;
+    background-color: rgb(255, 83, 83);
+}
+.form{
+    background-color: rgb(116, 230, 110);
+    text-align: center;
+    display:block ;
+    padding:10px;
+}
+.post{
+    display: block;
+}
+
+body {
+    margin: 0;
+    background-color: rgb(87, 87, 125);
+}
+
+.Nav-Bar{
+    background-color: rgb(14, 4, 40);
+    padding: 5%;
+    position: fixed;
+    width: 5vw;
+    left:0%;
+    top:0px;
+    height: 100vh; 
+    z-index: 100; 
+}
+
+.Nav-unit{
+    display: block;
+    padding: 10px;
+    margin:5px;
+    margin-bottom: 15px;
+    text-decoration: none;
+    color: rgb(160, 151, 243);
+    border-radius: 5px;
+
+    background-color:rgb(64, 42, 100);
+}

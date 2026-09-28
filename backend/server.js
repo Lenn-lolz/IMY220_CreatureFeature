@@ -32,22 +32,43 @@ app.post("/signup", (req, res) => {
     });
 });
 app.get("/api/posts", async (req, res) => {
-    // TODO: Retrieve all posts from MongoDB
     try {
         const db = getDB();
-        const collection = db.collection("Posts");
-        const posts = await collection.find().toArray();
+        const posts = await db.collection("Posts").aggregate([
+            {
+                $lookup: {
+                    from: "Users",
+                    localField: "userId",
+                    foreignField: "_id",
+                    as: "user"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$user",
+                    preserveNullAndEmptyArrays: true
+                }
+            }
+        ]).toArray();
+
         const formattedPosts = posts.map((post) => ({
-
             ...post,
-            _id: post._id.toString()
+            _id: post._id.toString(),
+            userId: post.userId.toString(),
 
+            user: post.user ? {
+                _id: post.user._id.toString(),
+                username: post.user.username
+            } : null
         }));
         res.status(200).json(formattedPosts);
-        console.log("Great success with retrieving users!");
 
-    }catch(error){
-        console.log("error with retrieving posts - " , error.message);
+    } catch (error) {
+        console.log("Error with retrieving posts - ", error.message);
+
+        res.status(500).json({
+            error: "Unable to load posts."
+        });
     }
 });
 //Profile API Request (View, Edit, View other profiles, Delete your profile)

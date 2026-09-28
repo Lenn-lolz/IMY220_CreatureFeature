@@ -83,11 +83,6 @@ p{
     display: flex;
 }
 
-.posts{
-    background-color: rgb(113, 122, 95);
-    padding:5px;
-    margin:2px;
-}
 
 #roundedImg {
     max-width: 100px;
@@ -96,8 +91,8 @@ p{
 }
 
 .profilePage-layout , .homePage-layout, .PostPage-layout, .User_profile , .post{
-    position: absolute ;
-    left:200px;
+    margin-left: 180px;
+    padding: 20px;
 }
 .notFound_page{
     text-align: center;
@@ -141,21 +136,20 @@ p{
     margin: 0 0 10px 0;
     text-align: left;
 }
-.post{
-    display: block;
-}
 
 
 
-.Nav-Bar{
+
+.Nav-Bar {
     background-color: rgb(14, 4, 40);
-    padding: 5%;
+    width: 180px;
+    height: 100vh;
+    padding: 10px;
     position: fixed;
-    width: 5vw;
-    left:0%;
-    top:0px;
-    height: 100vh; 
-    z-index: 100; 
+    left: 0;
+    top: 0;
+    z-index: 100;
+    box-sizing: border-box;
 }
 
 .Nav-unit{
@@ -168,4 +162,14 @@ p{
     border-radius: 5px;
 
     background-color:rgb(64, 42, 100);
+}
+
+.post{
+    background-color: #183252;
+    color:rgba(225, 117, 100, 1);
+    padding: 5px;
+    margin: 5px;
+}
+.posts{
+    background-color: #0A2342;
 }

@@ -198,7 +198,60 @@ app.put("/api/posts/:id", async (req, res) => {
 });
 
 app.delete("/api/posts/:id", async (req, res) => {
-    // Delete post
+
+    const postId = req.params.id;
+    const loggedInUserId = req.body.loggedInUserId;
+
+    try {
+
+        if (!loggedInUserId) {
+            return res.status(401).json({
+                success: false,
+                message: "You must be logged in."
+            });
+        }
+
+        const db = getDB();
+
+        // Find the post
+        const post = await db.collection("Posts").findOne({
+            _id: new ObjectId(postId)
+        });
+
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+
+        // Make sure the logged-in user owns the post
+        if (post.userId.toString() !== loggedInUserId) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only delete your own posts"
+            });
+        }
+
+        // Delete the post
+        await db.collection("Posts").deleteOne({
+            _id: new ObjectId(postId)
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Post deleted successfully"
+        });
+
+    } catch (error) {
+
+        console.log("Error deleting post:", error.message);
+
+        res.status(500).json({
+            success: false,
+            message: "Unable to delete post"
+        });
+    }
 });
 //Profile API Request (View, Edit, View other profiles, Delete your profile)
 
@@ -464,12 +517,124 @@ app.delete("/api/users/:id", async (req, res) => {
 
 //Friend / Unfriend API Request
 
+//adding friend
 app.post("/api/users/:id/friends/:friendId", async (req, res) => {
-    // Add friendId to user's friends array
+
+    const userId = req.params.id;
+    const friendId = req.params.friendId;
+
+    try {
+
+        const db = getDB();
+
+        // Check that the user exists
+        const user = await db.collection("Users").findOne({
+            _id: new ObjectId(userId)
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // Check that the friend exists
+        const friend = await db.collection("Users").findOne({
+            _id: new ObjectId(friendId)
+        });
+
+        if (!friend) {
+            return res.status(404).json({
+                success: false,
+                message: "Friend not found"
+            });
+        }
+
+        // Prevent adding yourself
+        if (userId === friendId) {
+            return res.status(400).json({
+                success: false,
+                message: "You cannot add yourself as a friend"
+            });
+        }
+
+        // Check if they are already friends
+        if (user.friends.includes(friendId)) {
+            return res.status(400).json({
+                success: false,
+                message: "User is already your friend"
+            });
+        }
+
+        // Add friend ID to the friends array
+        await db.collection("Users").updateOne(
+            {
+                _id: new ObjectId(userId)
+            },
+            {
+                $push: {
+                    friends: friendId
+                }
+            }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Friend added successfully"
+        });
+
+    } catch (error) {
+
+        console.log("Error adding friend:", error.message);
+
+        res.status(500).json({
+            success: false,
+            message: "Unable to add friend"
+        });
+    }
 });
 
+//removing friend from arr
 app.delete("/api/users/:id/friends/:friendId", async (req, res) => {
-    // Remove friendId from user's friends array
+
+    const userId = req.params.id;
+    const friendId = req.params.friendId;
+    try {
+        const db = getDB();
+        const user = await db.collection("Users").findOne({
+            _id: new ObjectId(userId)
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        if (!user.friends.includes(friendId)) {
+            return res.status(400).json({
+                success: false,
+                message: "User is not your friend"
+            });
+        }
+        await db.collection("Users").updateOne(
+            { _id: new ObjectId(userId)},
+            {$pull: {friends: friendId}}
+        );
+        res.status(200).json({
+            success: true,
+            message: "Friend removed successfully.Friendship ended"
+        });
+
+    } catch (error) {
+
+        console.log("Error removing friend:", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Unable to remove friend. maybe you were never friends in the first place"
+        });
+    }
 });
 
 //Album 

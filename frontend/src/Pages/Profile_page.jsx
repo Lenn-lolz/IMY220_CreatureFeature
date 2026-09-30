@@ -17,7 +17,46 @@ function Profile_page() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const loggedInUserId = localStorage.getItem("userId");
+    const [isFriend, setIsFriend] = useState(false);
+    async function toggleFriend() {
 
+        if (!loggedInUserId) {
+            setError("You must be logged in.");
+            return;
+        }
+
+        try {
+
+            const method = isFriend ? "DELETE" : "POST";
+
+            const response = await fetch(
+                `http://localhost:3000/api/users/${loggedInUserId}/friends/${profile._id}`,
+                {
+                    method: method
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.message);
+                return;
+            }
+
+            // Switch the button
+            setIsFriend(!isFriend);
+
+        } catch (error) {
+
+            console.log("Error changing friend:", error);
+
+            setError(
+                isFriend
+                    ? "Unable to unfriend user."
+                    : "Unable to add friend."
+            );
+        }
+    }
     async function deleteProfile() {
         const loggedInUserId = localStorage.getItem("userId");
         if (!loggedInUserId) {
@@ -64,10 +103,44 @@ function Profile_page() {
 
         fetch(`http://localhost:3000/api/users/${userId}`)
             .then((response) => {
-                if (!response.ok) {throw new Error("Failed to retrieve profile");}
+                if (!response.ok) {
+                    throw new Error("Failed to retrieve profile");
+                }
+
                 return response.json();
-            }).then((data) => {
+            })
+            .then((data) => {
+
                 setProfile(data.user);
+
+                // If looking at someone else's profile,
+                // check if they are already a friend
+                if (loggedInUserId && userId !== loggedInUserId) {
+
+                    return fetch(
+                        `http://localhost:3000/api/users/${loggedInUserId}`
+                    )
+                    .then((response) => {
+
+                        if (!response.ok) {
+                            throw new Error("Failed to retrieve logged in user");
+                        }
+
+                        return response.json();
+                    })
+                    .then((loggedInData) => {
+
+                        const friends = loggedInData.user.friends || [];
+
+                        setIsFriend(
+                            friends.includes(userId)
+                        );
+
+                        return fetch(
+                            `http://localhost:3000/api/users/${userId}/posts`
+                        );
+                    });
+                }
 
                 return fetch(
                     `http://localhost:3000/api/users/${userId}/posts`
@@ -78,13 +151,16 @@ function Profile_page() {
                 if (!response.ok) {
                     throw new Error("Unable to load posts.");
                 }
+
                 return response.json();
             })
             .then((data) => {
+
                 setPosts(data);
                 setLoading(false);
             })
             .catch((error) => {
+
                 setError(error.message);
                 setLoading(false);
             });
@@ -108,19 +184,23 @@ function Profile_page() {
                 <h1>{profile.username}</h1>
                 <p>{profile.caption}</p>
                 <p>{profile.pronouns}</p>
+
+                {!isOwnProfile && (
+                    <button onClick={toggleFriend}>
+                        {isFriend ? "Unfriend" : "Add Friend"}
+                    </button>
+                )}
             </div>
 
 
             {isOwnProfile && (
                 <div>
                     <Edit_profile profile={profile} onProfileUpdated={setProfile}/>
-                    <button onClick={deleteProfile}>
-                        Delete Profile
-                    </button>
+                    <button onClick={deleteProfile}> Delete Profile</button>
                 </div>
             )}
             <div className="Profile_posts">
-                <Posts posts={posts} profileId={profile._id}/>
+                <Posts posts={posts}setPosts={setPosts} profileId={profile._id}/>
             </div>
         </div>
     );

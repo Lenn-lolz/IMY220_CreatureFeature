@@ -10,6 +10,8 @@ function Navigation() {
             
             <Link to="/login"><button>Login</button></Link>
             <Link to="/signup"><button>Signup</button></Link>
+
+            <Link to="/CreatePost" className="AddPost_btn"><button>Post</button></Link>
         </nav>
     );
 }

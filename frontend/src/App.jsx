@@ -9,6 +9,7 @@ import Navigation from "./Components/Navigation";
 import NotFound from "./Components/NotFound";
 import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
+import CreatePost from "./Components/Create_Post";
 
 function AppContent() {
 
@@ -23,50 +24,16 @@ function AppContent() {
 
             <Routes>
 
-                <Route
-                    path="/"
-                    element={<Home_page />}
-                />
-
-                <Route
-                    path="/posts"
-                    element={<Post_page />}
-                />
-
-                <Route
-                    path="/posts/:id"
-                    element={<Post_page />}
-                />
-
-                <Route
-                    path="/splash"
-                    element={<Splashpage />}
-                />
-
-                <Route
-                    path="/profile"
-                    element={<Profile_page />}
-                />
-
-                <Route
-                    path="/profile/:id"
-                    element={<Profile_page />}
-                />
-
-                <Route
-                    path="/login"
-                    element={<Login />}
-                />
-
-                <Route
-                    path="/signup"
-                    element={<SignUp />}
-                />
-
-                <Route
-                    path="*"
-                    element={<NotFound />}
-                />
+                <Route path="/" element={<Home_page />}/>
+                <Route path="/posts" element={<Post_page />}/>
+                <Route path="/posts/:id" element={<Post_page />}/>
+                <Route path="/splash" element={<Splashpage />}/>
+                <Route path="/profile" element={<Profile_page />}/>
+                <Route path="/profile/:id" element={<Profile_page />}/>
+                <Route path="/login" element={<Login />}/>
+                <Route path="/signup" element={<SignUp />}/>
+                <Route path="/CreatePost"element={<CreatePost />}/>
+                <Route path="*" element={<NotFound />}/>
 
             </Routes>
 

@@ -10,7 +10,7 @@ body {
     background-size: 500px 500px; 
 }
 
-h1{
+h1,h2{
     font-family: "Ruslan Display", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -164,6 +164,18 @@ p{
     background-color:rgb(64, 42, 100);
 }
 
+.AddPost_btn{
+    position: absolute;
+    left:15px;
+    bottom: 15px;
+}
+.AddPost_btn button{
+    padding: 15px;
+    background-color: rgb(249, 116, 55);
+    border-radius: 10px;
+    border: none;
+}
+
 .post{
     background-color: #183252;
     color:rgba(225, 117, 100, 1);
@@ -178,4 +190,64 @@ p{
     background-color: #0A2342;
     color: rgba(225, 117, 100, 1);
     padding: 10px;
+}
+
+.Edit_profile_form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.Edit_profile_form form {
+    background-color:  #2c83a5;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.Edit_profile_form label {
+    display: flex;
+    flex-direction: column;
+    text-align: left; 
+    gap: 5px;
+    font-family: "Cuprum", sans-serif;
+}
+.Edit_profile_form input {
+    padding: 8px;
+    border: 1px solid #a5d1df;
+    border-radius: 6px;
+    font-size: 16px;
+}
+.Edit_profile_form h2 {
+    margin: 0 0 10px 0;
+    text-align: left;
+}
+
+.Create_Post{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.Create_Post form{
+    background-color:  #2CA58D;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
 }

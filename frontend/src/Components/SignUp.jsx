@@ -9,34 +9,51 @@ function SignUp() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        //all the error handlings for signup form
-        if (username.trim() ==="" || password.trim() ===""){ 
-            setError("Username or password is empty :("); return;
+        if (username.trim() === "" || password.trim() === "") {
+            setError("Username or password is empty :(");
+            return;
         }
-        if (password !== passwordConfirm){ 
-            setError("Passwords must match"); return;
+
+        if (password !== passwordConfirm) {
+            setError("Passwords must match");
+            return;
         }
         setError("");
-
-
-        
-        try { const response = await fetch("http://localhost:3000/signup",{
-                method: 'POST',
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({username: username,password: password})
+        try {
+            const response = await fetch("http://localhost:3000/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
             });
             const data = await response.json();
+
             console.log(data);
+
+            if (!response.ok) {
+                setError(data.message);
+                return;
+            }
+
             if (data.success) {
                 console.log(data.message);
                 navigate("/");
             }
-    }catch(error){
-        console.log("could not fetch ");
-    }}
+
+        } catch (error) {
+            console.log("Could not fetch:", error);
+            setError("Unable to connect to the server.");
+        }
+    };
+
     return (
         <div className="form">
             <form onSubmit={handleSubmit}>

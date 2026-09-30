@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +8,6 @@ function Login() {
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
-
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -17,7 +15,6 @@ function Login() {
             setError("Username or password is empty :(");
             return;
         }
-
         setError("");
 
         try {
@@ -33,7 +30,6 @@ function Login() {
             });
 
             const data = await response.json();
-
             console.log(data);
 
             if (!response.ok) {
@@ -45,11 +41,12 @@ function Login() {
                 console.log(data.message);
                 console.log("Logged in user:", data.user);
 
+                localStorage.setItem("userId", data.user._id);
+
                 navigate("/");
             }
-        } catch (error) {
+        } catch (error){
             console.log("Could not fetch:", error);
-
             setError("Unable to connect to the server.");
         }
     };
@@ -60,36 +57,20 @@ function Login() {
 
                 <h2>Log in</h2>
 
-                <label>
-                    Password
-                    <input
-                        value={password}
-                        name="password"
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                <label>Password
+                    <input value={password} name="password" type="password" onChange={(e) => setPassword(e.target.value)}/>
                 </label>
 
-                <label>
-                    Username
-                    <input
-                        value={username}
-                        name="username"
-                        type="text"
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
+                <label>Username
+                    <input value={username} name="username" type="text" onChange={(e) => setUsername(e.target.value)}/>
                 </label>
 
                 {error && <p>{error}</p>}
 
-                <button type="submit">
-                    Submit
-                </button>
+                <button type="submit">Submit</button>
 
-                <Link to="/">
-                    <button type="button">
-                        Back
-                    </button>
+                <Link to="/splash">
+                    <button type="button">Back</button>
                 </Link>
 
             </form>

@@ -11,6 +11,7 @@ async function connectDB() {
     client = new MongoClient(uri);
 
     try{
+        console.log("trying to connect ...");
         await client.connect();
         db = client.db("CreatureFeatureDB");
         console.log("Connected to MongoDB");

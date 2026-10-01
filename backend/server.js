@@ -197,6 +197,8 @@ app.put("/api/posts/:id", async (req, res) => {
     // Edit post
 });
 
+
+//deleting thine post
 app.delete("/api/posts/:id", async (req, res) => {
 
     const postId = req.params.id;
@@ -639,20 +641,90 @@ app.delete("/api/users/:id/friends/:friendId", async (req, res) => {
 
 //Album 
 
+//get all albums
 app.get("/api/albums", async (req, res) => {
-    // Get albums
+    try {
+        const db = getDB();
+
+        const albums = await db.collection("albums").find({}).toArray();
+
+        res.status(200).json(albums);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Unable to retrieve albums." });
+    }
 });
 
+//singular album 
 app.get("/api/albums/:id", async (req, res) => {
-    // Get one album
+    try {
+        const db = getDB();
+        const album = await db.collection("albums").findOne({
+            _id: new ObjectId(req.params.id)
+        });
+        if (!album) {
+            return res.status(404).json({ error: "Album not found." });
+        }
+        res.status(200).json(album);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Unable to retrieve album." });
+    }
 });
 
 app.post("/api/albums", async (req, res) => {
-    // Create album
+    try {
+        const db = getDB();
+        const { userId, name, description, postIds } = req.body;
+        if (!userId || !name) {
+            return res.status(400).json({
+                error: "userId and name are required."
+            });
+        }
+        const newAlbum = {
+            userId: userId,
+            name: name,
+            description: description || "",
+            postIds: postIds || []
+        };
+        const result = await db.collection("albums").insertOne(newAlbum);
+        res.status(201).json({_id: result.insertedId,...newAlbum});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Unable to create album." });
+    }
 });
 
 app.put("/api/albums/:id", async (req, res) => {
-    // Edit album
+    try {
+        const db = getDB();
+
+        const { name, description, postIds } = req.body;
+
+        const result = await db.collection("albums").updateOne(
+            { _id: new ObjectId(req.params.id) },
+            {
+                $set: {
+                    name: name,
+                    description: description,
+                    postIds: postIds
+                }
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: "Album not found." });
+        }
+
+        const updatedAlbum = await db.collection("albums").findOne({
+            _id: new ObjectId(req.params.id)
+        });
+
+        res.status(200).json(updatedAlbum);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Unable to update album." });
+    }
 });
 
 app.delete("/api/albums/:id", async (req, res) => {

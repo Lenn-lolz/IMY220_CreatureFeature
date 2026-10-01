@@ -132,7 +132,35 @@ app.get("/api/posts", async (req, res) => {
     }
 });
 app.get("/api/posts/:id", async (req, res) => {
-    // Get one post
+
+    try {
+
+        const db = getDB();
+
+        const post = await db.collection("Posts").findOne({
+            _id: new ObjectId(req.params.id)
+        });
+
+        if (!post) {
+
+            return res.status(404).json({
+                error: "Post not found."
+            });
+
+        }
+
+        res.json(post);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Unable to retrieve post."
+        });
+
+    }
+
 });
 
 //creating the post
@@ -194,7 +222,44 @@ app.post("/api/posts", async (req, res) => {
 
 
 app.put("/api/posts/:id", async (req, res) => {
-    // Edit post
+    try {
+        const db = getDB();
+        const { caption, hashtags } = req.body;
+        if (!caption) {
+            return res.status(400).json({
+                error: "Caption is required."
+            });
+        }
+
+        const result = await db.collection("Posts").updateOne(
+            {
+                _id: new ObjectId(req.params.id)
+            },
+            {
+                $set: {
+                    caption: caption,
+                    hashtags: hashtags || []
+                }
+            }
+        );
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                error: "Post not found."
+            });
+        }
+
+        const updatedPost = await db.collection("Posts").findOne({
+            _id: new ObjectId(req.params.id)
+        });
+
+        res.json(updatedPost);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Unable to edit post."
+        });
+    }
 });
 
 
@@ -214,8 +279,6 @@ app.delete("/api/posts/:id", async (req, res) => {
         }
 
         const db = getDB();
-
-        // Find the post
         const post = await db.collection("Posts").findOne({
             _id: new ObjectId(postId)
         });
@@ -226,16 +289,12 @@ app.delete("/api/posts/:id", async (req, res) => {
                 message: "Post not found"
             });
         }
-
-        // Make sure the logged-in user owns the post
         if (post.userId.toString() !== loggedInUserId) {
             return res.status(403).json({
                 success: false,
                 message: "You can only delete your own posts"
             });
         }
-
-        // Delete the post
         await db.collection("Posts").deleteOne({
             _id: new ObjectId(postId)
         });
@@ -244,9 +303,7 @@ app.delete("/api/posts/:id", async (req, res) => {
             success: true,
             message: "Post deleted successfully"
         });
-
     } catch (error) {
-
         console.log("Error deleting post:", error.message);
 
         res.status(500).json({
@@ -257,7 +314,7 @@ app.delete("/api/posts/:id", async (req, res) => {
 });
 //Profile API Request (View, Edit, View other profiles, Delete your profile)
 
-
+/* ---------------- PROFILE STUFF------------------------------- */
 
 app.get("/api/users", async (req, res) => {
     try {
@@ -265,24 +322,16 @@ app.get("/api/users", async (req, res) => {
         const collection = db.collection("Users");
         const users = await collection.find().toArray();
 
-        const formattedUsers = users.map((user) => ({
-            ...user,
-            _id: user._id.toString()
-
-        }));
+        const formattedUsers = users.map((user) => ({...user,_id: user._id.toString()}));
 
         res.status(200).json(formattedUsers);
-
         console.log("Great success with retrieving users!");
 
     } catch (error) {
 
         console.log("Error with retrieving users - ", error.message);
-
         res.status(500).json({
-
             error: "Failed to retrieve users"
-
         });
 
     }
@@ -329,13 +378,8 @@ app.get("/api/users/:id/posts", async (req, res) => {
         const userId = new ObjectId(req.params.id);
 
         const posts = await db.collection("Posts").aggregate([
-            {
-                $match: {
-                    userId: userId
-                }
-            },
-            {
-                $lookup: {
+            {$match: {userId: userId}},
+            {$lookup:{
                     from: "Users",
                     localField: "userId",
                     foreignField: "_id",
@@ -382,8 +426,6 @@ app.put("/api/users/:id", async (req, res) => {
     const caption = req.body.caption;
 
     try {
-
-        // Make sure the user is editing their own profile
         if (userId !== loggedInUserId) {
             return res.status(403).json({
                 success: false,
@@ -392,7 +434,6 @@ app.put("/api/users/:id", async (req, res) => {
         }
 
         const db = getDB();
-
         const existingUser = await db.collection("Users").findOne({
             _id: new ObjectId(userId)
         });
@@ -517,7 +558,7 @@ app.delete("/api/users/:id", async (req, res) => {
     }
 });
 
-//Friend / Unfriend API Request
+/* ---------------- FRIEND STUFF------------------------------- */
 
 //adding friend
 app.post("/api/users/:id/friends/:friendId", async (req, res) => {
@@ -526,10 +567,7 @@ app.post("/api/users/:id/friends/:friendId", async (req, res) => {
     const friendId = req.params.friendId;
 
     try {
-
         const db = getDB();
-
-        // Check that the user exists
         const user = await db.collection("Users").findOne({
             _id: new ObjectId(userId)
         });
@@ -540,8 +578,6 @@ app.post("/api/users/:id/friends/:friendId", async (req, res) => {
                 message: "User not found"
             });
         }
-
-        // Check that the friend exists
         const friend = await db.collection("Users").findOne({
             _id: new ObjectId(friendId)
         });
@@ -552,33 +588,21 @@ app.post("/api/users/:id/friends/:friendId", async (req, res) => {
                 message: "Friend not found"
             });
         }
-
-        // Prevent adding yourself
         if (userId === friendId) {
             return res.status(400).json({
                 success: false,
                 message: "You cannot add yourself as a friend"
             });
         }
-
-        // Check if they are already friends
         if (user.friends.includes(friendId)) {
             return res.status(400).json({
                 success: false,
                 message: "User is already your friend"
             });
         }
-
-        // Add friend ID to the friends array
         await db.collection("Users").updateOne(
-            {
-                _id: new ObjectId(userId)
-            },
-            {
-                $push: {
-                    friends: friendId
-                }
-            }
+            {_id: new ObjectId(userId)},
+            {$push:{friends: friendId}}
         );
 
         res.status(200).json({
@@ -587,9 +611,7 @@ app.post("/api/users/:id/friends/:friendId", async (req, res) => {
         });
 
     } catch (error) {
-
         console.log("Error adding friend:", error.message);
-
         res.status(500).json({
             success: false,
             message: "Unable to add friend"
@@ -639,14 +661,18 @@ app.delete("/api/users/:id/friends/:friendId", async (req, res) => {
     }
 });
 
-//Album 
+
+
+/* ---------------- ALBUM STUFF------------------------------- */
+
+
 
 //get all albums
 app.get("/api/albums", async (req, res) => {
     try {
         const db = getDB();
 
-        const albums = await db.collection("albums").find({}).toArray();
+        const albums = await db.collection("Album").find({}).toArray();
 
         res.status(200).json(albums);
     } catch (error) {
@@ -659,7 +685,7 @@ app.get("/api/albums", async (req, res) => {
 app.get("/api/albums/:id", async (req, res) => {
     try {
         const db = getDB();
-        const album = await db.collection("albums").findOne({
+        const album = await db.collection("Album").findOne({
             _id: new ObjectId(req.params.id)
         });
         if (!album) {
@@ -687,7 +713,7 @@ app.post("/api/albums", async (req, res) => {
             description: description || "",
             postIds: postIds || []
         };
-        const result = await db.collection("albums").insertOne(newAlbum);
+        const result = await db.collection("Album").insertOne(newAlbum);
         res.status(201).json({_id: result.insertedId,...newAlbum});
     } catch (error) {
         console.error(error);
@@ -698,48 +724,62 @@ app.post("/api/albums", async (req, res) => {
 app.put("/api/albums/:id", async (req, res) => {
     try {
         const db = getDB();
-
         const { name, description, postIds } = req.body;
-
-        const result = await db.collection("albums").updateOne(
-            { _id: new ObjectId(req.params.id) },
-            {
-                $set: {
+        const result = await db.collection("Album").updateOne(
+            { _id:new ObjectId(req.params.id) },
+            {$set:{
                     name: name,
                     description: description,
                     postIds: postIds
                 }
             }
         );
-
         if (result.matchedCount === 0) {
             return res.status(404).json({ error: "Album not found." });
         }
-
-        const updatedAlbum = await db.collection("albums").findOne({
+        const updatedAlbum = await db.collection("Album").findOne({
             _id: new ObjectId(req.params.id)
         });
-
         res.status(200).json(updatedAlbum);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Unable to update album." });
+        res.status(500).json({ error:"Unable to update album." });
     }
 });
 
+
+
+//delete thine Album
 app.delete("/api/albums/:id", async (req, res) => {
-    // Delete album
+    try {
+        const db =getDB();
+        const result = await db.collection("Album").deleteOne({
+            _id:new ObjectId(req.params.id)
+        });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: "Album not found." });
+        }
+        res.status(200).json({
+            message: "Album deleted successfully."
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Unable to delete album." });
+    }
 });
 
-//Comments:
+//Comments stuff:
+
 
 app.get("/api/posts/:postId/comments", async (req, res) => {
     // Get comments for post
 });
-
 app.post("/api/posts/:postId/comments", async (req, res) => {
     // Add comment
 });
+
+
+
 
 // LOCAL V GLOBAL
 
@@ -750,6 +790,7 @@ app.get("/api/feed/global", async (req, res) => {
 app.get("/api/feed/local", async (req, res) => {
     // Return local feed
 });
+
 
 connectDB()
     .then(() => {

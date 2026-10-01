@@ -141,6 +141,7 @@ p{
 
 
 .Nav-Bar {
+    font-family: "Cuprum", sans-serif;
     background-color: rgb(14, 4, 40);
     width: 180px;
     height: 100vh;
@@ -160,7 +161,7 @@ p{
     text-decoration: none;
     color: rgb(160, 151, 243);
     border-radius: 5px;
-
+    
     background-color:rgb(64, 42, 100);
 }
 
@@ -170,6 +171,8 @@ p{
     bottom: 15px;
 }
 .AddPost_btn button{
+    
+    font-family: "Cuprum", sans-serif;
     padding: 15px;
     background-color: rgb(249, 116, 55);
     border-radius: 10px;
@@ -250,4 +253,64 @@ p{
     gap: 15px;
     width: 100%;
     max-width: 400px;
+}
+
+.CreateAlbum_form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;    
+}
+
+.CreateAlbum_form form{
+    background-color:  #2CA58D;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.Profile_albums{
+    background-color: #2CA58D;
+}
+.Album_comp{
+    background-color: #2c83a5;
+}
+.AlbumPage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color:  #2CA58D;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;   
+    margin-left: 200px; 
+}
+
+.Edit_Post_Form{
+    background-color:  #2CA58D;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin-left: 200px;
 }

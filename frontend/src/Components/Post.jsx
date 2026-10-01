@@ -8,7 +8,6 @@ function Post({ post ,onDelete }) {
 
     async function deletePost() {
         try {
-
             const response = await fetch(
                 `http://localhost:3000/api/posts/${post._id}`,
                 {
@@ -50,7 +49,13 @@ function Post({ post ,onDelete }) {
             <p>{post.caption}</p>
             <p> #{post.hashtags.join(" #")}</p>
             <p> Likes: {post.likes}</p>
-            {isOwnPost && (<button onClick={deletePost}>Delete Post</button>)}
+            {isOwnPost && (
+                <div>
+                    <button onClick={deletePost}>Delete Post</button>
+                    <button onClick={() => navigate(`/editPost/${post._id}`)}>Edit Post</button>
+                </div>
+            )
+            }
             
             {!isOwnPost && (<button onClick={viewProfile}>View Profile</button>)}
         </div>

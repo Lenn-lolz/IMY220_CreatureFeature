@@ -1,15 +1,11 @@
-
-import Post from "../Components/Post";
-import Create_Post from "../Components/Create_Post";
-
-import "../assets/CSS/styles.css"; 
+import { useState, useEffect } from "react";
+import Posts from "../Components/Posts";
 
 function Post_page() {
+    
     return (
-        <div className= "PostPage-layout">
-            <Posts />
+        <div>
+            <Posts posts={posts} />
         </div>
     );
 }
-
-export default Post_page;

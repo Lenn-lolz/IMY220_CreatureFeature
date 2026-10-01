@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import "../assets/CSS/styles.css";
 
 import Edit_profile from "../Components/Edit_profile";
-
+import Albums from "../Components/Albums";
 import Posts from "../Components/Posts";
 
 function Profile_page() {
@@ -14,47 +13,30 @@ function Profile_page() {
 
     const [profile, setProfile] = useState(null);
     const [posts, setPosts] = useState([]);
+    const [albums, setAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const loggedInUserId = localStorage.getItem("userId");
     const [isFriend, setIsFriend] = useState(false);
+    const navigate = useNavigate();
+
     async function toggleFriend() {
 
-        if (!loggedInUserId) {
-            setError("You must be logged in.");
-            return;
-        }
-
+        if (!loggedInUserId) {setError("You must be logged in."); return;}
         try {
-
             const method = isFriend ? "DELETE" : "POST";
-
-            const response = await fetch(
-                `http://localhost:3000/api/users/${loggedInUserId}/friends/${profile._id}`,
-                {
-                    method: method
-                }
+            const response = await fetch(`http://localhost:3000/api/users/${loggedInUserId}/friends/${profile._id}`,
+                {method: method}
             );
-
             const data = await response.json();
 
-            if (!response.ok) {
-                setError(data.message);
-                return;
-            }
-
-            // Switch the button
+            if (!response.ok) {setError(data.message);return;}
             setIsFriend(!isFriend);
 
         } catch (error) {
 
             console.log("Error changing friend:", error);
-
-            setError(
-                isFriend
-                    ? "Unable to unfriend user."
-                    : "Unable to add friend."
-            );
+            setError(isFriend? "Unable to unfriend user.":"Unable to add friend.");
         }
     }
     async function deleteProfile() {
@@ -87,7 +69,6 @@ function Profile_page() {
         } catch (error) {
 
             console.log("Error deleting profile:", error);
-
             setError("Unable to delete profile.");
         }
     }
@@ -110,13 +91,8 @@ function Profile_page() {
                 return response.json();
             })
             .then((data) => {
-
                 setProfile(data.user);
-
-                // If looking at someone else's profile,
-                // check if they are already a friend
                 if (loggedInUserId && userId !== loggedInUserId) {
-
                     return fetch(
                         `http://localhost:3000/api/users/${loggedInUserId}`
                     )
@@ -150,11 +126,8 @@ function Profile_page() {
 
                 if (!response.ok) {
                     throw new Error("Unable to load posts.");
-                }
-
-                return response.json();
-            })
-            .then((data) => {
+                }return response.json();
+            }).then((data) => {
 
                 setPosts(data);
                 setLoading(false);
@@ -164,8 +137,26 @@ function Profile_page() {
                 setError(error.message);
                 setLoading(false);
             });
+    fetch("http://localhost:3000/api/albums")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Unable to load albums.");
+            }
 
-    }, [id, loggedInUserId]);
+            return response.json();
+        })
+        .then((data) => {
+            const userAlbums = data.filter(
+                (album) => album.userId === userId
+            );
+
+            setAlbums(userAlbums);
+        })
+        .catch((error) => {
+            console.log("Error loading albums:", error);
+        });
+
+}, [id, loggedInUserId]);
 
     if (loading) {return <h1>Loading profile...</h1>;}
     if (error) {return <h1>{error}</h1>;}
@@ -197,10 +188,15 @@ function Profile_page() {
                 <div>
                     <Edit_profile profile={profile} onProfileUpdated={setProfile}/>
                     <button onClick={deleteProfile}> Delete Profile</button>
+                    <button onClick={() => navigate("/createAlbum")}> Create Album </button>
                 </div>
             )}
             <div className="Profile_posts">
                 <Posts posts={posts}setPosts={setPosts} profileId={profile._id}/>
+            </div>
+            <div className="Profile_albums">
+                <h2>Albums</h2>
+                <Albums albums={albums} />
             </div>
         </div>
     );

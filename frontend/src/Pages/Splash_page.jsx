@@ -1,14 +1,12 @@
 import Login from "../Components/Login";
 import "../assets/CSS/styles.css"; 
 import logo from "../assets/Images/CF.png"; 
-import darknessBg from '../assets/Images/darkness.png';
 import { Link } from "react-router-dom";
 
 
 function Splashpage() {
     return (
-        <div style={{ backgroundImage: `url(${darknessBg})`}}
-        className="bg-violet-900 bg-cover bg-center bg-no-repeat bg-fixed min-h-screen text-slate-900">
+        <div className="min-h-screen text-slate-900">
             <div className="fixed right-1 flex justify-end gap-4 p-4">
                 <Link to="/login">
                     <button className="bg-green-200 px-4 py-2 rounded-lg">Login</button>

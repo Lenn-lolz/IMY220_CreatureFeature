@@ -15,21 +15,18 @@ import CreatePost from "./Components/Create_Post";
 import Create_album from "./Components/Create_album";
 import Edit_Post from "./Components/Edit_Post";
 
+import darknessBg from './assets/Images/darkness.png';
 function AppContent() {
 
     const noShow = ["/splash", "/login", "/signup"];
-
     const location = useLocation();
 
     return (
-        <div  >
-
+        <div>
             {!noShow.includes(location.pathname) && <Navigation />}
-
             <Routes>
 
                 <Route path="/" element={<Home_page />}/>
-
                 <Route path="/splash" element={<Splashpage />}/>
                 <Route path="/profile" element={<Profile_page />}/>
                 <Route path="/profile/:id" element={<Profile_page />}/>
@@ -51,7 +48,10 @@ function App() {
 
     return (
         <BrowserRouter >
-            <AppContent />
+        <div style={{ backgroundImage: `url(${darknessBg})`}} className="bg-violet-900 bg-cover bg-center bg-no-repeat bg-fixed min-h-screen text-slate-900">
+                <AppContent />
+            </div>
+            
         </BrowserRouter>
     );
 }

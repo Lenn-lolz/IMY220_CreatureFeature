@@ -33,5 +33,9 @@ docker stop backend
 # IMY220_CreatureFeature
 
 
-DOCKER:
-Docker compose up
+# DOCKER:
+
+## Running:
+    docker compose up
+## Stopping:
+    docker compose down

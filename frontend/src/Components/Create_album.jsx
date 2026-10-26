@@ -55,19 +55,19 @@ function Create_album() {
         }
     }
     return (
-        <div className="CreateAlbum_form">
-            <form onSubmit={createAlbum}>
-                <h2>Create Album</h2>
+        <div className="min-h-screen flex flex-col items-center justify-center">
+            <form className="border-2 border-dotted border-indigo-100 bg-violet-500 flex flex-col items-center gap-4 p-2" onSubmit={createAlbum}>
+                <h2 className="font-bold text-2xl">Create Album</h2>
 
                 <label>Album Name:
-                    <input type="text" value={name} onChange={(event) => setName(event.target.value)}/>
+                    <input className="bg-indigo-100 p-1 m-2 rounded" type="text" value={name} onChange={(event) => setName(event.target.value)}/>
                 </label>
                 <label>Album Description:
-                    <input type="text" value={description} onChange={(event) => setDescription(event.target.value)}/>
+                    <input className="bg-indigo-100 p-1 m-2 rounded" type="text" value={description} onChange={(event) => setDescription(event.target.value)}/>
                 </label>
-                <button type="submit">Create Album </button>
+                <button className="font-bold bg-indigo-900 p-2 rounded-2xl hover:bg-indigo-400" type="submit">Create Album </button>
             </form>
-            {error && <p>{error}</p>}
+            {error && <p className="bg-red-400 p-1 m-1 text-red-950 m-1 rounded">{error}</p>}
         </div>
     );
 }

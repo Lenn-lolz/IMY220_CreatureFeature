@@ -53,7 +53,7 @@ function Login() {
 
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <form onSubmit={handleSubmit} className=" shadow-[0_0_30px_5px_rgba(54,187,120)] p-8 rounded-2xl flex flex-col items-center gap-4 bg-green-400 box-shadow-4">
+            <form onSubmit={handleSubmit} className=" shadow-[2px_5px_5px_2px_rgba(94,787,420)] p-8 rounded-2xl flex flex-col items-center gap-4 bg-teal-400 box-shadow-4">
                 <h2 className="text-3xl font-bold">Log in</h2>
                 <label className="p-2">Password
                     <input className="m-2 p-1 rounded" value={password} name="password" type="password" onChange={(e) => setPassword(e.target.value)}/>
@@ -66,10 +66,10 @@ function Login() {
                 {error && <p>{error}</p>}
 
                 <div className="flex flex-start">
-                    <button className="hover:bg-green-700 bg-green-900 text-green-100 p-2 rounded m-1" type="submit">Submit</button>
+                    <button className="hover:bg-green-700 bg-teal-900 text-green-100 p-2 rounded m-1" type="submit">Submit</button>
 
                     <Link to="/splash">
-                        <button className="hover:bg-green-700 bg-green-900 text-green-100 p-2 rounded m-1" type="button">Back</button>
+                        <button className="hover:bg-green-700 bg-teal-900 text-green-100 p-2 rounded m-1" type="button">Back</button>
                     </Link>
                 </div>
 

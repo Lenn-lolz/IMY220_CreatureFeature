@@ -27,14 +27,9 @@ function Post({ post ,onDelete }) {
                 alert(data.message);
                 return;
             }
-
-        onDelete(post._id);
-
+            onDelete(post._id);
         } catch (error) {
-
             console.log("Error deleting post:", error);
-
-            alert("Unable to delete post.");
         }
     }
     function viewProfile() {
@@ -54,8 +49,8 @@ function Post({ post ,onDelete }) {
             <p> Likes: {post.likes}</p>
             {isOwnPost && (
                 <div className="flex">
-                    <button className="bg-amber-400 p-1 m-1 text-sky-950 hover:bg-amber-800" onClick={deletePost}>Delete Post</button>
-                    <button className="bg-amber-400 p-1 m-1 text-sky-950 hover:bg-amber-800" onClick={() => navigate(`/editPost/${post._id}`)}>Edit Post</button>
+                    <button className="bg-rose-400 p-1 m-1 text-rose-950 hover:bg-rose-800 " onClick={deletePost}>Delete Post</button>
+                    <button className="bg-rose-400 p-1 m-1 text-rose-950 hover:bg-rose-800" onClick={() => navigate(`/editPost/${post._id}`)}>Edit Post</button>
                 </div>
             )
             }

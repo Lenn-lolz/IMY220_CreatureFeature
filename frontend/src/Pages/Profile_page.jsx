@@ -21,7 +21,6 @@ function Profile_page() {
     const navigate = useNavigate();
 
     async function toggleFriend() {
-
         if (!loggedInUserId) {setError("You must be logged in."); return;}
         try {
             const method = isFriend ? "DELETE" : "POST";
@@ -29,12 +28,10 @@ function Profile_page() {
                 {method: method}
             );
             const data = await response.json();
-
             if (!response.ok) {setError(data.message);return;}
             setIsFriend(!isFriend);
 
         } catch (error) {
-
             console.log("Error changing friend:", error);
             setError(isFriend? "Unable to unfriend user.":"Unable to add friend.");
         }
@@ -42,7 +39,7 @@ function Profile_page() {
     async function deleteProfile() {
         const loggedInUserId = localStorage.getItem("userId");
         if (!loggedInUserId) {
-            setError("You must be logged in.");
+            setError("You must be logged in okk.");
             return;
         }
         try {
@@ -65,7 +62,6 @@ function Profile_page() {
             }
             localStorage.removeItem("userId");
             window.location.href = "/splash";
-
         } catch (error) {
 
             console.log("Error deleting profile:", error);
@@ -73,21 +69,17 @@ function Profile_page() {
         }
     }
     useEffect(() => {
-
         const userId = id || loggedInUserId;
-
         if (!userId) {
             setError("You are not logged in.");
             setLoading(false);
             return;
         }
-
         fetch(`http://localhost:3000/api/users/${userId}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Failed to retrieve profile");
                 }
-
                 return response.json();
             })
             .then((data) => {
@@ -101,7 +93,6 @@ function Profile_page() {
                         if (!response.ok) {
                             throw new Error("Failed to retrieve logged in user");
                         }
-
                         return response.json();
                     })
                     .then((loggedInData) => {
@@ -169,7 +160,7 @@ function Profile_page() {
     const isOwnProfile = profile._id === loggedInUserId;
 
     return (
-        <div className="profilePage-layout">
+        <div className="min-h-screen bg-violet-900 text-slate-900">
 
             <div className="Profile_header">
                 <h1>{profile.username}</h1>

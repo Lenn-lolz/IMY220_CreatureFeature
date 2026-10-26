@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import dns from "node:dns/promises";
+
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 let client;

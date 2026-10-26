@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 
 function Splashpage() {
     return (
-        <div className="Splashpage-layout">
+        <div className="min-h-screen bg-violet-900 text-slate-900">
 
             <div className="Slash_Header">
-                <img src={logo} alt="CF Logo" />
+                <img src={logo} alt="CF Logo"  className="w-35"/>
                 <h1>Creature Feature</h1>
                 
             </div>
@@ -21,7 +21,7 @@ function Splashpage() {
               freakiest creature.
             </p>
 
-            <div className="Splash_login">
+            <div className="fixed top-0 right-0 bg-green-200">
                 <Link to="/login">
                     <button>Login</button>
                 </Link>

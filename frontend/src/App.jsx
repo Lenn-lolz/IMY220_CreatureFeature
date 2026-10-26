@@ -22,7 +22,7 @@ function AppContent() {
     const location = useLocation();
 
     return (
-        <div className="App">
+        <div className="App" >
 
             {!noShow.includes(location.pathname) && <Navigation />}
 
@@ -50,7 +50,7 @@ function AppContent() {
 function App() {
 
     return (
-        <BrowserRouter>
+        <BrowserRouter >
             <AppContent />
         </BrowserRouter>
     );

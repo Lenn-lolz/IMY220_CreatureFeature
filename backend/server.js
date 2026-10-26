@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB, getDB } from "./db.js";
 import { ObjectId } from "mongodb";
+
 dotenv.config();
 
 const app = express();
@@ -134,33 +135,24 @@ app.get("/api/posts", async (req, res) => {
 app.get("/api/posts/:id", async (req, res) => {
 
     try {
-
         const db = getDB();
-
         const post = await db.collection("Posts").findOne({
             _id: new ObjectId(req.params.id)
         });
-
         if (!post) {
-
             return res.status(404).json({
                 error: "Post not found."
             });
 
         }
-
         res.json(post);
-
     } catch (error) {
-
         console.error(error);
 
         res.status(500).json({
             error: "Unable to retrieve post."
         });
-
     }
-
 });
 
 //creating the post
@@ -230,7 +222,6 @@ app.put("/api/posts/:id", async (req, res) => {
                 error: "Caption is required."
             });
         }
-
         const result = await db.collection("Posts").updateOne(
             {
                 _id: new ObjectId(req.params.id)

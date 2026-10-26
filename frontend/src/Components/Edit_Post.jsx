@@ -15,11 +15,9 @@ function Edit_Post() {
             try {
                 const response = await fetch(`http://localhost:3000/api/posts/${id}`
                 );
-
                 if (!response.ok) {
                     throw new Error("Unable to load post.");
                 }
-
                 const data = await response.json();
 
                 setCaption(data.caption);
@@ -30,7 +28,6 @@ function Edit_Post() {
                 console.log("Error loading post:", error);
                 setError(error.message);
                 setLoading(false);
-
             }
         }
         getPost();
@@ -69,7 +66,6 @@ function Edit_Post() {
         <div className="Edit_Post_Form">
             <form onSubmit={editPost}>
                 <h2>Edit post</h2>
-
                 <label> New Post caption
                     <input type="text" value={caption} onChange={(event) => setCaption(event.target.value)}/>
                 </label>
@@ -77,7 +73,6 @@ function Edit_Post() {
                 <button type="submit">Save Changes</button>
 
             </form>
-
             {error && <p>{error}</p>}
 
         </div>

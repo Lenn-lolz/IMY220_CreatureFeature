@@ -14,13 +14,11 @@ function Home_page() {
 
         fetch("http://localhost:3000/api/posts")
             .then((response) => {
-
                 if (!response.ok) {
                     throw new Error("Unable to load posts.");
                 }
 
                 return response.json();
-
             })
             .then((data) => {
 
@@ -46,7 +44,7 @@ function Home_page() {
     }
 
     return (
-        <div className="homePage-layout">
+        <div className="min-h-screen bg-violet-900 text-slate-900">
             <Posts posts={posts} />
         </div>
     );

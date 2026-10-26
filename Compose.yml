@@ -1,0 +1,56 @@
+# Student Number: u24566935
+
+services:
+  db:
+    image: mongo
+    container_name: CreatureFeature_DB
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db 
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - creatureFeature-net
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: CreatureFeature_api
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    #environment:
+    #  MONGODB_URI: mongodb://db:27017
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env
+    networks:
+      - creatureFeature-net
+
+  client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: CreatureFeature_client
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - creatureFeature-net
+
+volumes:
+  mongo_data:
+
+networks:
+  creatureFeature-net:

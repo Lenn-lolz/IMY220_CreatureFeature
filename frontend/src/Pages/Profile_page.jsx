@@ -160,34 +160,37 @@ function Profile_page() {
     const isOwnProfile = profile._id === loggedInUserId;
 
     return (
-        <div className="min-h-screen bg-violet-900 text-slate-900">
+        <div className=" flex flex-col items-center min-h-screen w-full bg-violet-900 text-slate-100 p-4">
+            <div className="w-full max-w-4xl flex flex-col gap-6">
+                <div className="Profile_header">
+                    <h1>{profile.username}</h1>
+                    <p>{profile.caption}</p>
+                    <p>{profile.pronouns}</p>
 
-            <div className="Profile_header">
-                <h1>{profile.username}</h1>
-                <p>{profile.caption}</p>
-                <p>{profile.pronouns}</p>
-
-                {!isOwnProfile && (
-                    <button onClick={toggleFriend}>
-                        {isFriend ? "Unfriend" : "Add Friend"}
-                    </button>
-                )}
-            </div>
-
-
-            {isOwnProfile && (
-                <div>
-                    <Edit_profile profile={profile} onProfileUpdated={setProfile}/>
-                    <button onClick={deleteProfile}> Delete Profile</button>
-                    <button onClick={() => navigate("/createAlbum")}> Create Album </button>
+                    {!isOwnProfile && (
+                        <button onClick={toggleFriend}>
+                            {isFriend ? "Unfriend" : "Add Friend"}
+                        </button>
+                    )}
                 </div>
-            )}
-            <div className="Profile_posts">
-                <Posts posts={posts}setPosts={setPosts} profileId={profile._id}/>
-            </div>
-            <div className="Profile_albums">
-                <h2>Albums</h2>
-                <Albums albums={albums} />
+
+
+                {isOwnProfile && (
+                    <div className="flex flex-col gap-3 p-4 bg-violet-800/50 rounded-xl items-center">
+                        <Edit_profile profile={profile} onProfileUpdated={setProfile}/>
+                        <button onClick={deleteProfile}> Delete Profile</button>
+                        <button onClick={() => navigate("/createAlbum")}> Create Album </button>
+                    </div>
+                )}
+                <div className="Profile_posts w-full mt-4">
+                    <div className="Profile_posts w-full mt-4">
+                        <Posts posts={posts} setPosts={setPosts} profileId={profile._id}/>
+                    </div>
+                </div>
+                <div className="Profile_albums">
+                    <h2>Albums</h2>
+                    <Albums albums={albums} />
+                </div>
             </div>
         </div>
     );

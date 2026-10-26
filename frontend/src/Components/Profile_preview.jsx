@@ -13,7 +13,7 @@ function Profile_preview({ prof }) {
             <h2>Profile ID: {prof._id}</h2>
 
             <Link to={`/profiles/${prof._id}`}>
-                <button type="button">
+                <button type="button" className="bg-amber-500">
                     View Profile
                 </button>
             </Link>

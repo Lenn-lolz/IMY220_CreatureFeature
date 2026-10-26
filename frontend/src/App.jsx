@@ -22,7 +22,7 @@ function AppContent() {
     const location = useLocation();
 
     return (
-        <div className="App" >
+        <div  >
 
             {!noShow.includes(location.pathname) && <Navigation />}
 

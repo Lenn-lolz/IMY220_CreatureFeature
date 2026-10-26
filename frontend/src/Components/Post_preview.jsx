@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 function Post_preview() {
     const { id } = useParams();
     return (
-        <div className="post">
+        <div className="bg-amber-400">
             <h1>Post details</h1>
             <h2>Post ID:{post.id}</h2>
         </div>

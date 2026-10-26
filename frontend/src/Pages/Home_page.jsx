@@ -44,7 +44,7 @@ function Home_page() {
     }
 
     return (
-        <div className="min-h-screen text-slate-900">
+        <div className="min-h-screen ml-48 text-slate-900">
             <Posts posts={posts} />
         </div>
     );

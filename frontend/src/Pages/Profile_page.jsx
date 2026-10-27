@@ -43,9 +43,7 @@ function Profile_page() {
             return;
         }
         try {
-            const response = await fetch(
-                `http://localhost:3000/api/users/${loggedInUserId}`,
-                {
+            const response = await fetch(`http://localhost:3000/api/users/${loggedInUserId}`,{
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json"
@@ -85,9 +83,7 @@ function Profile_page() {
             .then((data) => {
                 setProfile(data.user);
                 if (loggedInUserId && userId !== loggedInUserId) {
-                    return fetch(
-                        `http://localhost:3000/api/users/${loggedInUserId}`
-                    )
+                    return fetch(`http://localhost:3000/api/users/${loggedInUserId}`)
                     .then((response) => {
 
                         if (!response.ok) {
@@ -108,10 +104,7 @@ function Profile_page() {
                         );
                     });
                 }
-
-                return fetch(
-                    `http://localhost:3000/api/users/${userId}/posts`
-                );
+                return fetch(`http://localhost:3000/api/users/${userId}/posts`);
             })
             .then((response) => {
 
@@ -162,13 +155,14 @@ function Profile_page() {
     return (
         <div className=" flex flex-col items-center min-h-screen w-full bg-violet-900 text-slate-100 p-4">
             <div className="w-full max-w-4xl flex flex-col gap-6">
-                <div className="Profile_header">
-                    <h1>{profile.username}</h1>
-                    <p>{profile.caption}</p>
-                    <p>{profile.pronouns}</p>
-
+                <div className="flex bg-rose-800 p-3 m-1">
+                    <div className="flex flex-col">
+                        <h1 className="font-Heading text-3xl">{profile.username}</h1>
+                        <p>{profile.caption}</p>
+                        <p>{profile.pronouns}</p>
+                    </div>
                     {!isOwnProfile && (
-                        <button onClick={toggleFriend}>
+                        <button className="hover:bg-violet-400 bg-violet-300 text-violet-950 font-bold p-1 rounded-2xl" onClick={toggleFriend}>
                             {isFriend ? "Unfriend" : "Add Friend"}
                         </button>
                     )}

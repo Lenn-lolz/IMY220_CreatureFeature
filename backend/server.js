@@ -4,6 +4,33 @@ import dotenv from "dotenv";
 import { connectDB, getDB } from "./db.js";
 import { ObjectId } from "mongodb";
 
+import multer from "multer";
+import path from "path";
+
+const UPLOAD_DIR = path.resolve("uploads");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(null, `${unique}${ext}`);
+  },
+});
+function imagesOnly(req, file, cb) {
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only image files are allowed."));
+  }
+}
+const upload = multer({
+  storage,
+  fileFilter: imagesOnly,
+  limits: {fileSize: 200 * 1024 *1024}, //200Mb?! sure why not
+});
+
+
 dotenv.config();
 
 const app = express();
@@ -11,7 +38,7 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
-
+app.use("/uploads", express.static(UPLOAD_DIR));
 //Authentication API Request
 
 app.post("/login", async (req, res) => {
@@ -156,7 +183,7 @@ app.get("/api/posts/:id", async (req, res) => {
 });
 
 //creating the post
-app.post("/api/posts", async (req, res) => {
+app.post("/api/posts" ,upload.single("image"), async ( req, res) => {
     const userId = req.body.userId;
     const caption = req.body.caption;
     const hashtags = req.body.hashtags || [];
@@ -186,7 +213,8 @@ app.post("/api/posts", async (req, res) => {
             userId: new ObjectId(userId),
             caption: caption,
             hashtags: hashtags,
-            likes: 0
+            likes: 0,
+            image: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
         };
         const result = await db.collection("Posts").insertOne(newPost);
 

@@ -6,11 +6,15 @@ function Create_Post() {
     const [HashTags, setHashtags] = useState([]);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
+    const [file, setFile] = useState(null);
 
-    const handleSubmit = async (event) => {
+    function handleFileChange(e) {
+        setError(null);
+        setFile(e.target.files[0]?? null);
+    }
 
+     const handleSubmit = async (event) => {
         event.preventDefault();
-
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
@@ -25,20 +29,24 @@ function Create_Post() {
         setMessage("");
 
         try {
+            // 1. Pack data into FormData instead of JSON
+            const formData = new FormData();
+            formData.append("userId", userId);
+            formData.append("caption", caption);
+            // Append the actual file payload (corresponds to the backend field name)
+            if (file) {
+                formData.append("image", file); 
+            }
+            // Array fields must be appended individually or stringified
+            HashTags.forEach(tag => formData.append("hashtags[]", tag));
+
+            // 2. Fetch call WITHOUT Content-Type header
             const response = await fetch("http://localhost:3000/api/posts", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    userId: userId,
-                    caption: caption,
-                    hashtags: HashTags
-                })
+                body: formData // No headers object needed here
             });
 
             const data = await response.json();
-
             console.log(data);
 
             if (!response.ok) {
@@ -48,16 +56,13 @@ function Create_Post() {
 
             if (data.success) {
                 setMessage("Post created successfully!");
-
                 setCaption("");
                 setHashtags([]);
+                setFile(null); // Clear selected file
             }
-
         } catch (error) {
-
             console.log("Could not create post:", error);
             setError("Unable to create post.");
-
         }
     };
 
@@ -79,7 +84,7 @@ function Create_Post() {
                 </label>
 
                 <label>Upload Post
-                    <input type="file" id="profile-pic" name="profilePic" accept="image/png, image/jpeg"/>
+                    <input type="file" id="profile-pic" name="profilePic" onChange={handleFileChange} accept="image/png, image/jpeg"/>
                 </label>
 
                 {error && <p className="bg-red-400 p-1 m-1 text-red-950 m-1 rounded">{error}</p>}

@@ -51,8 +51,14 @@ function Post({ post ,onDelete }) {
                 </div>
             )
             }
+            <img className="max-w-60 bg-indigo-900/20 p-1 m-2 rounded border-2 border-dotted" src={post.image} />
             
-            {!isOwnPost && (<button className="font-TextRegular bg-indigo-900 p-1.5 m-1 flex rounded-xl hover:bg-indigo-950" onClick={viewProfile}>View Profile</button>)}
+            {!isOwnPost && (
+                <div className="flex">
+                    <button className="font-TextRegular bg-indigo-900 p-1 m-1 flex rounded-xl hover:bg-indigo-950 " onClick={viewProfile}>View Profile</button>
+                    <button className="font-TextRegular bg-rose-900 p-1 m-1 flex rounded-xl hover:bg-rose-950">like</button>
+                </div>
+            )}
         </div>
     );
 }

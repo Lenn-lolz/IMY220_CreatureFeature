@@ -11,15 +11,15 @@ function Navigation() {
     }
     return (
         <nav className="fixed top-0 left-0 z-40 h-screen w-44 border-r-5 border-amber-500 border-dotted bg-indigo-950 p-5 flex flex-col" >
-
-            <img src={logo} alt="CF Logo"  className="w-25"/>
+            <h2 className="text-rose-300 font-Heading text-xl" >Creature feature</h2>
+            <Link to="/"><img src={logo} alt="CF Logo"  className="w-25"/></Link>
 
             <Link to="/" className="rounded hover:bg-teal-700 text-center bg-violet-400 p-2 m-2">Home</Link>
             <Link to="/profile" className="rounded hover:bg-teal-700 text-center bg-violet-400 p-2 m-2">Profile</Link>
             <button className="rounded hover:bg-teal-700 bg-violet-400 p-2 m-2" onClick={handleLogout}>Log out</button>
             <Link to="/CreatePost" className="rounded hover:bg-teal-700 fixed bottom-0 text-center bg-teal-200 rounded-4xl p-5 m-3 mb-5 ml-5 hover:bg-teal-400 shadow-[0px_2px_2px_5px_rgba(22,81,94,0.8)]"><button>Post</button></Link>
-        
 
+            <button className="absolute l-0 bg-indigo-500"></button>
         </nav>
         
     );

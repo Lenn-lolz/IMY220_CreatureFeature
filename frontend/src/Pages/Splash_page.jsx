@@ -18,8 +18,8 @@ function Splashpage() {
             </div>       
             <div className=" flex flex-col items-center justify-center text-center min-h-[80vh] px-4">
                 <div className="Slash_Header">
-                    <img src={logo} alt="CF Logo"  className="w-35"/>
-                    <h1 className="text-4xl font-bold text-violet-100">Creature Feature</h1>
+                    <img src={logo} alt="CF Logo "  className="w-35 flex justify-center"/>
+                    <h1 className="text-5xl text-rose-100 font-Heading">Creature Feature</h1>
                 </div>
 
                 <p className="bg-red-900 max-w-xl mt-6 text-lg rounded-lg p-5 text-violet-100">Welcome to creature feature!

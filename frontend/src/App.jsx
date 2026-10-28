@@ -48,7 +48,9 @@ function App() {
 
     return (
         <BrowserRouter >
-        <div style={{ backgroundImage: `url(${darknessBg})`}} className="bg-violet-900 bg-cover bg-center bg-no-repeat bg-fixed min-h-screen text-slate-900">
+        <div style={{ backgroundImage: `url(${darknessBg})`}} 
+        className="bg-violet-900 bg-cover bg-center bg-no-repeat bg-fixed
+         min-h-screen text-slate-900">
                 <AppContent />
             </div>
             

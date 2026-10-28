@@ -85,23 +85,17 @@ function Profile_page() {
                 if (loggedInUserId && userId !== loggedInUserId) {
                     return fetch(`http://localhost:3000/api/users/${loggedInUserId}`)
                     .then((response) => {
-
                         if (!response.ok) {
                             throw new Error("Failed to retrieve logged in user");
                         }
                         return response.json();
                     })
                     .then((loggedInData) => {
-
                         const friends = loggedInData.user.friends || [];
-
                         setIsFriend(
                             friends.includes(userId)
                         );
-
-                        return fetch(
-                            `http://localhost:3000/api/users/${userId}/posts`
-                        );
+                        return fetch(`http://localhost:3000/api/users/${userId}/posts`);
                     });
                 }
                 return fetch(`http://localhost:3000/api/users/${userId}/posts`);
@@ -176,15 +170,24 @@ function Profile_page() {
                         <button onClick={() => navigate("/createAlbum")}> Create Album </button>
                     </div>
                 )}
-                <div className="Profile_posts w-full mt-4">
-                    <div className="Profile_posts w-full mt-4">
-                        <Posts posts={posts} setPosts={setPosts} profileId={profile._id}/>
+                {isFriend && (
+                    <div>
+                        <div className="Profile_posts w-full mt-4">
+                            <div className="Profile_posts w-full mt-4">
+                                <Posts posts={posts} setPosts={setPosts} profileId={profile._id}/>
+                            </div>
+                        </div>
+                        <div className="Profile_albums">
+                            <h2>Albums</h2>
+                            <Albums albums={albums} />
+                        </div>
+                        <div>
+
+                        </div>
+ 
                     </div>
-                </div>
-                <div className="Profile_albums">
-                    <h2>Albums</h2>
-                    <Albums albums={albums} />
-                </div>
+                )}
+
             </div>
         </div>
     );

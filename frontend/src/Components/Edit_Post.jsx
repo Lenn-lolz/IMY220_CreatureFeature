@@ -63,14 +63,14 @@ function Edit_Post() {
         return <h2>Loading post...</h2>;
     }
     return (
-        <div className="Edit_Post_Form">
-            <form onSubmit={editPost}>
-                <h2>Edit post</h2>
+        <div className="min-h-screen flex items-center justify-center">
+            <form onSubmit={editPost} className="min-h-50 border-3 border-dotted border-violet-950 bg-indigo-400 flex flex-col items-center gap-4 p-2 justify-center">
+                <h2 className="font-Heading text-4xl">Edit post</h2>
                 <label> New Post caption
-                    <input type="text" value={caption} onChange={(event) => setCaption(event.target.value)}/>
+                    <input className="bg-indigo-200 p-1" type="text" value={caption} onChange={(event) => setCaption(event.target.value)}/>
                 </label>
 
-                <button type="submit">Save Changes</button>
+                <button type="submit" className="bg-indigo-200 p-2 rounded hover:bg-indigo-300">Save Changes</button>
 
             </form>
             {error && <p>{error}</p>}

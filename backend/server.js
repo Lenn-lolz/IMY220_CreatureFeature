@@ -11,9 +11,9 @@ const UPLOAD_DIR = path.resolve("uploads");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) => {
+  filename: (req, file, cb) =>{
     const ext = path.extname(file.originalname).toLowerCase();
-    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const unique = `${Date.now()}-${Math.round(Math.random()* 1e9)}`;
     cb(null, `${unique}${ext}`);
   },
 });
@@ -175,7 +175,6 @@ app.get("/api/posts/:id", async (req, res) => {
         res.json(post);
     } catch (error) {
         console.error(error);
-
         res.status(500).json({
             error: "Unable to retrieve post."
         });
@@ -548,16 +547,12 @@ app.delete("/api/users/:id", async (req, res) => {
                 message: "User not found"
             });
         }
-
-        // Delete all posts belonging to this user
         const deletedPosts = await db.collection("Posts").deleteMany({
             userId: objectUserId
-        });
-
-        // Delete the user
+        });//deleting their posts
         const deletedUser = await db.collection("Users").deleteOne({
             _id: objectUserId
-        });
+        });//then delete user
 
         res.status(200).json({
             success: true,
@@ -565,11 +560,8 @@ app.delete("/api/users/:id", async (req, res) => {
             deletedPosts: deletedPosts.deletedCount,
             deletedUser: deletedUser.deletedCount
         });
-
     } catch (error) {
-
         console.log("Error deleting user:", error.message);
-
         res.status(500).json({
             success: false,
             message: "Unable to delete profile"
@@ -579,9 +571,10 @@ app.delete("/api/users/:id", async (req, res) => {
 
 /* ---------------- FRIEND STUFF------------------------------- */
 
+//getting friends
+
 //adding friend
 app.post("/api/users/:id/friends/:friendId", async (req, res) => {
-
     const userId = req.params.id;
     const friendId = req.params.friendId;
 
@@ -637,7 +630,6 @@ app.post("/api/users/:id/friends/:friendId", async (req, res) => {
         });
     }
 });
-
 //removing friend from arr
 app.delete("/api/users/:id/friends/:friendId", async (req, res) => {
 

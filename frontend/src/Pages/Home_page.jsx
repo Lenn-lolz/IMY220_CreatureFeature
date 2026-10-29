@@ -94,7 +94,7 @@ function Home_page() {
                 <label className="text-indigo-200">
                     Search:{" "}
                     <input
-                        className="bg-indigo-300 border text-indigo-900 min-w-100"
+                        className="bg-indigo-300 border text-indigo-900 min-w-100 p-1"
                         type="search"
                         id="searchPosts"
                         value={thingSearched}
@@ -103,15 +103,22 @@ function Home_page() {
                 </label>
 
                 <button className="bg-indigo-300 p-1 ml-40 flex justify-end font-bold rounded hover:bg-indigo-400" onClick={toggleFeedType}>
-                   {isLocal ? "General": "Local"}
+                   {isLocal? "General":"Local"}
                 </button>
             </div>
 
-            <div className="ml-48 text-slate-900">
-                <h2>{isLocal ? "Local Feed" : "General Feed"}</h2>
+            <div className="ml-48 ">
+                <h2 className="font-Heading text-2xl text-indigo-200" >{isLocal? "Local" :"General"}</h2>
 
-                <Posts posts={filteredPosts} />
-                <Albums albums={filteredAlbums} />
+
+                {isLocal && filteredPosts.length === 0 && filteredAlbums.length ===0 ?(
+                    <h2 className="min-h-screen text-indigo-200">Try to make some friends! :D</h2>
+                ):(    
+                <div>            
+                    <Posts posts={filteredPosts} />
+                    <Albums albums={filteredAlbums} />
+                </div>
+                )}
             </div>
         </div>
     );

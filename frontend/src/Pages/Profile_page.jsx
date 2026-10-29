@@ -18,6 +18,12 @@ function Profile_page() {
     const [error, setError] = useState("");
     const loggedInUserId = localStorage.getItem("userId");
     const [isFriend, setIsFriend] = useState(false);
+
+    const [isEdit, setIsEdit] = useState(false);
+
+    async function toggleEdit() {
+        setIsEdit(!isEdit);
+    }
     const navigate = useNavigate();
 
     async function toggleFriend() {
@@ -144,15 +150,19 @@ function Profile_page() {
     const isOwnProfile= profile._id === loggedInUserId;
 
     return (
-        <div className=" flex flex-col items-center min-h-screen w-full bg-violet-900 text-slate-100 p-4">
+        <div className=" flex flex-col items-center min-h-screen w-full bg-violet-900/50 text-slate-100 p-4 ">
             <div className="w-full max-w-4xl flex flex-col gap-6">
-                <div className="flex bg-rose-800 p-3 m-1">
+                <div className="flex bg-rose-800 p-3 m-1 rounded-tl-4xl rounded-tr-4xl">
                     <div className="flex flex-row">
                         
-                        <img className="w-20 h-20 rounded-full object-cover border-1 border-indigo-950 m-2" src={profile.image} ></img>
+                        <img className="w-20 h-20 rounded-full object-cover border-1 border-indigo-950 m-2 " src={profile.image} ></img>
                         <div className="flex flex-col">
                             <h1 className="font-Heading  text-3xl">{profile.username}</h1>
                             <p className="text-2xl">{profile.caption}</p>
+                            {isOwnProfile &&(
+                                <button className="bg-indigo-300/50 m-2 rounded font-bold" onClick={toggleEdit}>{isEdit ? "hide" :"edit"}</button>
+                            )}
+                            
                         </div>
                         <p className="font-Heading text-2xl">{profile.pronouns}</p>
                     </div>
@@ -166,10 +176,14 @@ function Profile_page() {
 
 
                 {isOwnProfile && (
-                    <div className="flex flex-col gap-3 p-4 bg-violet-800/50 rounded-xl items-center">
-                        <Edit_profile profile={profile} onProfileUpdated={setProfile}/>
-                        <button onClick={deleteProfile}> Delete Profile</button>
-                        <button onClick={() => navigate("/createAlbum")}> Create Album </button>
+                    <div className="flex gap-3 p-4 bg-violet-800/50 rounded-xl items-center">
+                        {isEdit && (
+                            <Edit_profile profile={profile} onProfileUpdated={setProfile}/>
+                        )}
+                        <div className="">
+                            <button className="bg-rose-500/50 m-2 rounded font-bold p-1 hover:bg-rose-800/50" onClick={deleteProfile}> Delete Profile</button>
+                            <button className="bg-rose-500/50 m-2 rounded font-bold p-1 hover:bg-rose-800/50" onClick={() => navigate("/createAlbum")}> Create Album </button>
+                        </div>
                     </div>
                 )}
                 {(isFriend || isOwnProfile) && (

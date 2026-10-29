@@ -51,11 +51,13 @@ function AlbumPage() {
     if (!album) {return <h1>Album not found.</h1>;}
 
     return(
-        <div className="">
-
-            <h1>{album.name}</h1>
-            <p>{album.description}</p>
-            <h2>Posts</h2>
+        <div className="min-h-screen flex items-start justify-center ">
+            <div className="min-w-100 flex justify-center flex-col bg-indigo-500/50 ml-45 flex flex-col p-5">
+                <h1>{album.name}</h1>
+                <p>{album.description}</p>
+                <button className="bg-teal-200 w-20" >add post</button>
+                <h2>Posts</h2>
+            </div>
 
             {posts.length=== 0? (<p>This album has no posts</p>):(
                 <div className="flex flex-row justify-center p-2 mb-2 bg-indigo-800/20 ml-48">

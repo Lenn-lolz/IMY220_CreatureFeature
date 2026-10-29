@@ -478,7 +478,7 @@ app.get("/api/users/:id/posts", async (req, res) => {
     }
 });
 
-app.put("/api/users/:id", async (req, res) => {
+app.put("/api/users/:id", upload.single("image"), async (req, res) => {
 
     const userId = req.params.id;
     const loggedInUserId = req.body.loggedInUserId;
@@ -543,6 +543,8 @@ app.put("/api/users/:id", async (req, res) => {
                 _id: updatedUser._id.toString(),
                 username: updatedUser.username,
                 caption: updatedUser.caption,
+                image:req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`: 
+            "https://i.pinimg.com/736x/8f/2d/bb/8f2dbbb5098b705914c8b54de34e46b9.jpg",
                 friends: updatedUser.friends,
                 role: updatedUser.role,
                 pronouns: updatedUser.pronouns

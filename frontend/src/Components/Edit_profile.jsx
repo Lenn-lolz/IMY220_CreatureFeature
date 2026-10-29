@@ -5,6 +5,7 @@ function Edit_profile({ profile, onProfileUpdated }) {
     const [username, setUsername] = useState(profile.username);
     const [pronouns, setPronouns] = useState(profile.pronouns || "");
     const [caption, setCaption] = useState(profile.caption || "");
+    const [ProfileImage, setProfileImage] = useState(null);
 
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
@@ -15,19 +16,21 @@ function Edit_profile({ profile, onProfileUpdated }) {
         const loggedInUserId = localStorage.getItem("userId");
 
         try {
+
+            const EditStuff = new FormData();
+            EditStuff.append("username",username);
+            EditStuff.append("pronouns",pronouns);
+            EditStuff.append("caption",caption);
+            EditStuff.append("loggedInUserId",loggedInUserId);
+
+            if(ProfileImage){
+                EditStuff.append("image",ProfileImage)
+            }
             const response = await fetch(
                 `http://localhost:3000/api/users/${profile._id}`,
                 {
                     method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        pronouns: pronouns,
-                        caption: caption,
-                        loggedInUserId: loggedInUserId
-                    })
+                    body: EditStuff,
                 }
             );
 
@@ -51,30 +54,34 @@ function Edit_profile({ profile, onProfileUpdated }) {
     }
 
     return (
-        <div className="Edit_profile_form">
+        <div className="flex flex-col  justify-center">
 
-            <form onSubmit={handleSubmit}>
-                <h2>Edit profile</h2>
-                <label>New Username
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+            <form onSubmit={handleSubmit} className="flex flex-col bg-rose-600/50 p-4 m-2">
+                <h2 className="flex justify-center font-Heading text-2xl">Edit profile</h2>
+                <label className="flex justify-center flex-col ">New Username
+                    <input className="p-1 text-rose-900 rounded border-2 border-rose-900 bg-rose-200" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
                 </label>
 
-                <label>New Profile pic
-                    <input type="file" id="profile-pic" name="profilePic" accept="image/png, image/jpeg"/>
+                <label className="flex justify-center flex-col  "  >
+                        New Profile pic
+                    <input
+                    accept="image/*"
+                    onChange={(e) => setProfileImage(e.target.files[0] || null)}
+                    className="p-1 text-rose-900 rounded border-2 border-rose-900 bg-rose-200" type="file" id="profile-pic" name="profilePic"/>
                 </label>
 
-                <label>New Pronouns
-                    <input type="text" value={pronouns} onChange={(e) => setPronouns(e.target.value)}/>
+                <label className="flex justify-center flex-col  ">New Pronouns
+                    <input  className="p-1 text-rose-900 rounded border-2 border-rose-900 bg-rose-200" type="text" value={pronouns} onChange={(e) => setPronouns(e.target.value)}/>
                 </label>
 
-                <label>New Caption
-                    <input type="text" value={caption} onChange={(e) => setCaption(e.target.value)}/>
+                <label className="flex justify-center flex-col ">New Caption
+                    <input className="p-1 text-rose-900 rounded border-2 border-rose-900 bg-rose-200" type="text" value={caption} onChange={(e) => setCaption(e.target.value)}/>
                 </label>
 
                 {error && <p>{error}</p>}
                 {message && <p>{message}</p>}
 
-                <button type="submit">Save Changes</button>
+                <button className="max-w-50 text-teal-900 flex justify-center m-2 p-1 rounded bg-teal-500 hover:bg-teal-600 " type="submit">Save Changes</button>
 
             </form>
         </div>

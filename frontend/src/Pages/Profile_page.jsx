@@ -167,7 +167,7 @@ function Profile_page() {
                         <p className="font-Heading text-2xl">{profile.pronouns}</p>
                     </div>
                     {!isOwnProfile && (
-                        <button className="hover:bg-violet-400 bg-violet-300 text-violet-950 font-bold p-1 rounded-2xl" 
+                        <button className="hover:bg-violet-400 bg-violet-300 text-violet-950 font-bold p-1 rounded-2xl ml-95" 
                             onClick={toggleFriend}>
                             {isFriend ? "Unfriend" :"Add Friend"}
                         </button>

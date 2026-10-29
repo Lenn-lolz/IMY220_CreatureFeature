@@ -26,15 +26,17 @@ function SignUp() {
         }
         setError("");
         try{
+            const signUPstuff = new FormData();
+
+            signUPstuff.append("username",username);
+            signUPstuff.append("password",password);
+
+            if(ProfileImage){
+                signUPstuff.append("image",ProfileImage)
+            }
             const response = await fetch("http://localhost:3000/signup", {
                 method: "POST",
-                headers:{
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                })
+                body: signUPstuff
             });
             const data = await response.json();
 
@@ -46,6 +48,8 @@ function SignUp() {
             }
 
             if (data.success) {
+                localStorage.setItem("userId", data.user._id);
+                localStorage.setItem("username", data.user.username);
                 console.log(data.message);
                 navigate("/");
             }
@@ -73,7 +77,11 @@ function SignUp() {
                 </label>
                 <label>Profile picture 
                     <img></img>
-                    <input className="m-2 p-1 rounded bg-indigo-200 border-2 border-teal-900" value={ProfileImage} name="username" type="file"  onChange={(e) => setProfileImage(e.target.value)}></input>
+                    <input  className="m-2 p-1 rounded bg-indigo-200 border-2 border-teal-900" 
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setProfileImage(e.target.files[0] || null)} >
+                    </input>
                 </label>
                 {error && <p className="bg-rose-500 p-1 m-1">{error}</p>}
                 <div className="flex flex-start">

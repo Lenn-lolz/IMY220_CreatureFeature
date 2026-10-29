@@ -119,21 +119,19 @@ function Profile_page() {
             if (!response.ok) {
                 throw new Error("Unable to load albums.");
             }
-
             return response.json();
         })
         .then((data) => {
             const userAlbums = data.filter(
                 (album) => album.userId === userId
             );
-
             setAlbums(userAlbums);
         })
         .catch((error) => {
             console.log("Error loading albums:", error);
         });
 
-}, [id, loggedInUserId]);
+},[id, loggedInUserId]);
 
     if (loading) {return <h1>Loading profile...</h1>;}
     if (error) {return <h1>{error}</h1>;}
@@ -143,17 +141,20 @@ function Profile_page() {
         );
     }
 
-    const isOwnProfile = profile._id === loggedInUserId;
+    const isOwnProfile= profile._id === loggedInUserId;
 
     return (
         <div className=" flex flex-col items-center min-h-screen w-full bg-violet-900 text-slate-100 p-4">
             <div className="w-full max-w-4xl flex flex-col gap-6">
                 <div className="flex bg-rose-800 p-3 m-1">
-                    <div className="flex flex-col">
-                        <img src={profile.image} ></img>
-                        <h1 className="font-Heading text-3xl">{profile.username}</h1>
-                        <p>{profile.caption}</p>
-                        <p>{profile.pronouns}</p>
+                    <div className="flex flex-row">
+                        
+                        <img className="w-20 h-20 rounded-full object-cover border-1 border-indigo-950 m-2" src={profile.image} ></img>
+                        <div className="flex flex-col">
+                            <h1 className="font-Heading  text-3xl">{profile.username}</h1>
+                            <p className="text-2xl">{profile.caption}</p>
+                        </div>
+                        <p className="font-Heading text-2xl">{profile.pronouns}</p>
                     </div>
                     {!isOwnProfile && (
                         <button className="hover:bg-violet-400 bg-violet-300 text-violet-950 font-bold p-1 rounded-2xl" 
@@ -171,7 +172,7 @@ function Profile_page() {
                         <button onClick={() => navigate("/createAlbum")}> Create Album </button>
                     </div>
                 )}
-                {isFriend && (
+                {(isFriend || isOwnProfile) && (
                     <div>
                         <div className="Profile_posts w-full mt-4">
                             <div className="Profile_posts w-full mt-4">

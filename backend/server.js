@@ -92,7 +92,8 @@ app.post("/signup",upload.single("image"), async (req, res) => {
             password: password,
             caption: "",
             friends: [],
-            image: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
+            image:req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`: 
+            "https://i.pinimg.com/736x/8f/2d/bb/8f2dbbb5098b705914c8b54de34e46b9.jpg", //default profile image witch is pink batman
         };
 
         const result = await db.collection("Users").insertOne(newUser);
@@ -417,6 +418,8 @@ app.get("/api/users/:id", async (req, res) => {
                 _id: user._id.toString(),
                 username: user.username,
                 caption: user.caption,
+                image: user.image,
+                pronouns: user.pronouns,
                 friends: user.friends
             }
         });

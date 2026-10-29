@@ -36,6 +36,6 @@ docker stop backend
 # DOCKER:
 
 ## Running:
-    docker compose up
+    docker compose up -d --build
 ## Stopping:
     docker compose down

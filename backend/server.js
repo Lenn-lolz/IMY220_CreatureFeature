@@ -258,6 +258,7 @@ app.post("/api/posts" ,upload.single("image"), async ( req, res) => {
             hashtags: hashtags,
             likes: 0,
             image: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
+            createdAt: new Date(),
         };
         const result = await db.collection("Posts").insertOne(newPost);
 

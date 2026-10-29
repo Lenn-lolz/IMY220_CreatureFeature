@@ -63,6 +63,9 @@ function Post({ post ,onDelete }) {
             <label>Comment
                 <input src="text" id="CommentInput"></input>
             </label>
+            <p >
+            {post.createdAt? new Date(post.createdAt).toLocaleString(): "Date unavailable"}
+            </p>
         </div>
     );
 }

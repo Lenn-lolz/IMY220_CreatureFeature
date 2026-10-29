@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 import Posts from "../Components/Posts";
@@ -13,6 +12,7 @@ function Home_page() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [isLocal, setIsLocal] = useState(true);
+    const [thingSearched, setThingSearched] = useState("");
 
     // Get the logged-in user's ID
     const loggedInUserId = localStorage.getItem("userId");
@@ -22,18 +22,13 @@ function Home_page() {
             setLoading(true);
             setError("");
 
-            try {
-                if (!loggedInUserId) {
-                    throw new Error("Please log in first.");
-                }
-
-                // Tell the backend which feed we want
-                const feedType = isLocal ? "local" : "general";
+            try{
+                //feed want
+                const feedType= isLocal ? "local" :"general";
 
                 const postsResponse = await fetch(
                     `http://localhost:3000/api/posts?feed=${feedType}&userId=${loggedInUserId}`
                 );
-
                 const albumsResponse = await fetch(
                     `http://localhost:3000/api/albums?feed=${feedType}&userId=${loggedInUserId}`
                 );
@@ -41,7 +36,6 @@ function Home_page() {
                 if (!postsResponse.ok || !albumsResponse.ok) {
                     throw new Error("Unable to load feed.");
                 }
-
                 const postsData = await postsResponse.json();
                 const albumsData = await albumsResponse.json();
 
@@ -55,20 +49,44 @@ function Home_page() {
         }
 
         fetchFeed();
-    }, [isLocal, loggedInUserId]);
+    },[isLocal, loggedInUserId]);
 
     // Just switch the selected feed
     function toggleFeedType() {
         setIsLocal((previous) => !previous);
     }
 
-    if (loading) {
-        return <p>Loading feed...</p>;
+    function Searching(item, thingSearched) {
+        const search = thingSearched.trim().toLowerCase();
+        if (!search){return true;}
+
+        const hashtags = Array.isArray(item.hashtags)? item.hashtags.join(" "): item.hashtags || "";
+        const searchableText = [
+            item.name,
+            item.title,
+            item.caption,
+            item.description,
+            item.content,
+            hashtags,
+            item.user?.username,
+            item.username
+        ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+        return searchableText.includes(search);
     }
 
-    if (error) {
-        return <p>{error}</p>;
-    }
+    const filteredPosts = posts.filter((post) =>
+        Searching(post, thingSearched)
+    );
+
+    const filteredAlbums = albums.filter((album) =>
+        Searching(album, thingSearched)
+    );
+
+    if (loading){return <p>...</p>;}
+    if (error) {return <p>{error}</p>;}
 
     return (
         <div className="min-h-screen">
@@ -79,6 +97,8 @@ function Home_page() {
                         className="bg-indigo-300 border text-indigo-900 min-w-100"
                         type="search"
                         id="searchPosts"
+                        value={thingSearched}
+                        onChange={(event) => setThingSearched(event.target.value)}
                     />
                 </label>
 
@@ -90,8 +110,8 @@ function Home_page() {
             <div className="ml-48 text-slate-900">
                 <h2>{isLocal ? "Local Feed" : "General Feed"}</h2>
 
-                <Posts posts={posts} />
-                <Albums albums={albums} />
+                <Posts posts={filteredPosts} />
+                <Albums albums={filteredAlbums} />
             </div>
         </div>
     );

@@ -13,19 +13,13 @@ function AlbumPage() {
     useEffect(() => {
         async function getAlbum() {
             try {
-                // Get the album
-                const albumResponse = await fetch(
-                    `http://localhost:3000/api/albums/${id}`
-                );
+                const albumResponse = await fetch(`http://localhost:3000/api/albums/${id}`);
                 if (!albumResponse.ok) {
                     throw new Error("Unable to load album.");
                 }
-
                 const albumData = await albumResponse.json();
 
                 setAlbum(albumData);
-
-                // Get all posts
                 const postsResponse = await fetch(
                     "http://localhost:3000/api/posts"
                 );
@@ -35,8 +29,6 @@ function AlbumPage() {
                 }
 
                 const postsData = await postsResponse.json();
-
-                // Only keep posts that are in this album
                 const albumPosts = postsData.filter((post) =>
                     albumData.postIds.includes(post._id)
                 );
@@ -54,28 +46,18 @@ function AlbumPage() {
         getAlbum();
     }, [id]);
 
-    if (loading) {
-        return <h1>Loading album...</h1>;
-    }
+    if (loading) {return <h1>Loading album...</h1>;}
+    if (error) {return <h1>{error}</h1>;}
+    if (!album) {return <h1>Album not found.</h1>;}
 
-    if (error) {
-        return <h1>{error}</h1>;
-    }
-
-    if (!album) {
-        return <h1>Album not found.</h1>;
-    }
-
-    return (
+    return(
         <div className="">
 
             <h1>{album.name}</h1>
             <p>{album.description}</p>
             <h2>Posts</h2>
 
-            {posts.length=== 0? (
-                <p>This album has no posts yet.</p>
-            ):(
+            {posts.length=== 0? (<p>This album has no posts</p>):(
                 <div className="flex flex-row justify-center p-2 mb-2 bg-indigo-800/20 ml-48">
                     <Posts posts={posts} setPosts={setPosts} />
                 </div>

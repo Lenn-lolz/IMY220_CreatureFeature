@@ -19,10 +19,10 @@ function Album({ album }) {
             console.log("Error deleting album:", error);
         }
     }return (
-        <div className="Album_comp">
-            <h3>{album.name}</h3>
+        <div className="bg-rose-900 border-indigo-200 border-2 border-dotted p-2">
+            <h3 className="font-Heading text-2xl">{album.name}</h3>
             <p>{album.description}</p>
-            <button onClick={() => navigate(`/albums/${album._id}`)}>View Album</button>
+            <button className="flex bg-teal-500 rounded p-1 text-teal-950 font-bold m-1" onClick={() => navigate(`/albums/${album._id}`)}>View Album</button>
             {isOwner && (<button onClick={deleteAlbum}>Delete Album</button>)}
         </div>
     );

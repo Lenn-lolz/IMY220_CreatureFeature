@@ -23,8 +23,8 @@ function Profile_page() {
     async function toggleFriend() {
         if (!loggedInUserId) {setError("You must be logged in."); return;}
         try {
-            const method = isFriend ? "DELETE" : "POST";
-            const response = await fetch(`http://localhost:3000/api/users/${loggedInUserId}/friends/${profile._id}`,
+            const method = isFriend? "DELETE": "POST";
+            const response= await fetch(`http://localhost:3000/api/users/${loggedInUserId}/friends/${profile._id}`,
                 {method: method}
             );
             const data = await response.json();
@@ -33,7 +33,7 @@ function Profile_page() {
 
         } catch (error) {
             console.log("Error changing friend:", error);
-            setError(isFriend? "Unable to unfriend user.":"Unable to add friend.");
+            setError(isFriend? "Unable to unfriend user *sad.":"Unable to add friend *sad.");
         }
     }
     async function deleteProfile() {
@@ -61,12 +61,11 @@ function Profile_page() {
             localStorage.removeItem("userId");
             window.location.href = "/splash";
         } catch (error) {
-
             console.log("Error deleting profile:", error);
             setError("Unable to delete profile.");
         }
     }
-    useEffect(() => {
+    useEffect(()=> {
         const userId = id || loggedInUserId;
         if (!userId) {
             setError("You are not logged in.");
@@ -151,13 +150,15 @@ function Profile_page() {
             <div className="w-full max-w-4xl flex flex-col gap-6">
                 <div className="flex bg-rose-800 p-3 m-1">
                     <div className="flex flex-col">
+                        <img src={profile.image} ></img>
                         <h1 className="font-Heading text-3xl">{profile.username}</h1>
                         <p>{profile.caption}</p>
                         <p>{profile.pronouns}</p>
                     </div>
                     {!isOwnProfile && (
-                        <button className="hover:bg-violet-400 bg-violet-300 text-violet-950 font-bold p-1 rounded-2xl" onClick={toggleFriend}>
-                            {isFriend ? "Unfriend" : "Add Friend"}
+                        <button className="hover:bg-violet-400 bg-violet-300 text-violet-950 font-bold p-1 rounded-2xl" 
+                            onClick={toggleFriend}>
+                            {isFriend ? "Unfriend" :"Add Friend"}
                         </button>
                     )}
                 </div>
@@ -177,8 +178,8 @@ function Profile_page() {
                                 <Posts posts={posts} setPosts={setPosts} profileId={profile._id}/>
                             </div>
                         </div>
-                        <div className="Profile_albums">
-                            <h2>Albums</h2>
+                        <div className="">
+                            <h2 className="font-Heading p-5 text-3xl flex justify-center">Albums</h2>
                             <Albums albums={albums} />
                         </div>
                         <div>

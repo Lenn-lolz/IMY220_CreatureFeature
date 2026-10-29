@@ -66,7 +66,7 @@ app.post("/login", async (req, res) => {
         });
     } 
 });
-app.post("/signup", async (req, res) => {
+app.post("/signup",upload.single("image"), async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -91,7 +91,8 @@ app.post("/signup", async (req, res) => {
             username: username,
             password: password,
             caption: "",
-            friends: []
+            friends: [],
+            image: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
         };
 
         const result = await db.collection("Users").insertOne(newUser);
@@ -119,10 +120,50 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+
+//get all posts (can find all posts of friends of logged in user)
 app.get("/api/posts", async (req, res) => {
     try {
         const db = getDB();
+        const { feed, userId } = req.query;
+
+        let matchStage = {};
+
+        // Local feed: only posts from friends
+        if (feed === "local") {
+            if (!userId || !ObjectId.isValid(userId)) {
+                return res.status(400).json({
+                    message: "A valid userId is required."
+                });
+            }
+
+            const loggedInUser = await db.collection("Users").findOne({
+                _id: new ObjectId(userId)
+            });
+
+            if (!loggedInUser) {
+                return res.status(404).json({
+                    message: "User not found."
+                });
+            }
+
+            // Friends are stored as string IDs
+            const friendIds = loggedInUser.friends || [];
+
+            // Support both string IDs and MongoDB ObjectIds
+            const friendObjectIds = friendIds
+                .filter((id) => ObjectId.isValid(id))
+                .map((id) => new ObjectId(id));
+
+            matchStage = {
+                userId: {
+                    $in: [...friendIds, ...friendObjectIds]
+                }
+            };
+        }
+
         const posts = await db.collection("Posts").aggregate([
+            { $match: matchStage },
             {
                 $lookup: {
                     from: "Users",
@@ -147,18 +188,20 @@ app.get("/api/posts", async (req, res) => {
             user: post.user ? {
                 _id: post.user._id.toString(),
                 username: post.user.username
-            }:null
+            } : null
         }));
+
         res.status(200).json(formattedPosts);
 
     } catch (error) {
         console.log("Error with retrieving posts - ", error.message);
 
         res.status(500).json({
-            error: "Unable to load posts."
+            message: "Unable to load posts."
         });
     }
 });
+
 app.get("/api/posts/:id", async (req, res) => {
 
     try {
@@ -239,7 +282,7 @@ app.post("/api/posts" ,upload.single("image"), async ( req, res) => {
     }
 });
 
-
+//update a specific post
 app.put("/api/posts/:id", async (req, res) => {
     try {
         const db = getDB();
@@ -265,11 +308,9 @@ app.put("/api/posts/:id", async (req, res) => {
                 error: "Post not found."
             });
         }
-
         const updatedPost = await db.collection("Posts").findOne({
             _id: new ObjectId(req.params.id)
         });
-
         res.json(updatedPost);
 
     } catch (error) {
@@ -502,6 +543,9 @@ app.put("/api/users/:id", async (req, res) => {
                 friends: updatedUser.friends,
                 role: updatedUser.role,
                 pronouns: updatedUser.pronouns
+                
+
+
             }
         });
 
@@ -678,17 +722,59 @@ app.delete("/api/users/:id/friends/:friendId", async (req, res) => {
 
 
 
-//get all albums
+//get all albums (based of feed,get all correct albums (friends and no friends))
 app.get("/api/albums", async (req, res) => {
     try {
         const db = getDB();
+        const { feed, userId } = req.query;
 
-        const albums = await db.collection("Album").find({}).toArray();
+        let filter = {};
+
+        if (feed === "local") {
+            if (!userId || !ObjectId.isValid(userId)) {
+                return res.status(400).json({
+                    message: "A valid userId is required."
+                });
+            }
+
+            // Find the logged-in user
+            const loggedInUser = await db.collection("Users").findOne({
+                _id: new ObjectId(userId)
+            });
+
+            if (!loggedInUser) {
+                return res.status(404).json({
+                    message: "User not found."
+                });
+            }
+
+            // Get their friends' IDs
+            const friendIds = loggedInUser.friends || [];
+
+            // Filter albums to only those belonging to friends
+            const friendObjectIds = friendIds
+                .filter((id) => ObjectId.isValid(id))
+                .map((id) => new ObjectId(id));
+
+            filter = {
+                userId: {
+                    $in: [...friendIds, ...friendObjectIds]
+                }
+            };
+        }
+
+        const albums = await db.collection("Album")
+            .find(filter)
+            .toArray();
 
         res.status(200).json(albums);
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Unable to retrieve albums." });
+        console.error("Error retrieving albums:", error);
+
+        res.status(500).json({
+            message: "Unable to retrieve albums."
+        });
     }
 });
 

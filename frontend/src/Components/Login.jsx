@@ -54,13 +54,13 @@ function Login() {
     return (
         <div className="min-h-screen flex items-center justify-center">
             <form onSubmit={handleSubmit} className=" shadow-[2px_5px_5px_2px_rgba(94,787,420)] p-8 rounded-2xl flex flex-col items-center gap-4 bg-teal-400 box-shadow-4">
-                <h2 className="text-3xl font-bold">Log in</h2>
+                <h2 className="text-3xl font-Heading font-bold">Log in</h2>
                 <label className="p-2">Password
-                    <input className="m-2 p-1 rounded" value={password} name="password" type="password" onChange={(e) => setPassword(e.target.value)}/>
+                    <input className="m-2 p-1 rounded bg-indigo-200 border-2 border-teal-900" value={password} name="password" type="password" onChange={(e) => setPassword(e.target.value)}/>
                 </label>
 
                 <label className="p-2">Username
-                    <input className="m-2 p-1 rounded" value={username} name="username" type="text" onChange={(e) => setUsername(e.target.value)}/>
+                    <input className="m-2 p-1 rounded bg-indigo-200 border-2 border-teal-900s" value={username} name="username" type="text" onChange={(e) => setUsername(e.target.value)}/>
                 </label>
 
                 {error && <p>{error}</p>}

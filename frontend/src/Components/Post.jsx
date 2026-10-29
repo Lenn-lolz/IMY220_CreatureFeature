@@ -59,6 +59,10 @@ function Post({ post ,onDelete }) {
                     <button className="font-TextRegular bg-rose-900 p-1 m-1 flex rounded-xl hover:bg-rose-950">like</button>
                 </div>
             )}
+            <button>view comments</button>
+            <label>Comment
+                <input src="text" id="CommentInput"></input>
+            </label>
         </div>
     );
 }

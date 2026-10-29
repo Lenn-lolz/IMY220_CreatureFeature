@@ -67,16 +67,16 @@ function AlbumPage() {
     }
 
     return (
-        <div className="AlbumPage">
+        <div className="">
 
             <h1>{album.name}</h1>
             <p>{album.description}</p>
             <h2>Posts</h2>
 
-            {posts.length === 0? (
+            {posts.length=== 0? (
                 <p>This album has no posts yet.</p>
             ):(
-                <div>
+                <div className="flex flex-row justify-center p-2 mb-2 bg-indigo-800/20 ml-48">
                     <Posts posts={posts} setPosts={setPosts} />
                 </div>
             )}
